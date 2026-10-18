@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quick Test App</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --primary: #38bdf8;
+      --danger: #f87171;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 16px;
+    }
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+    p {
+      color: #94a3b8;
+      font-size: 13px;
+      margin: 0 0 20px;
+    }
+    .display {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 20px;
+    }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+    }
+    button {
+      flex: 1;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #0f172a;
+      background: var(--primary);
+      transition: transform 0.1s ease;
+    }
+    button:active {
+      transform: scale(0.96);
+    }
+    button.reset {
+      background: var(--border);
+      color: var(--text);
+    }
+    .status {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #4ade80;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h1>Netlify Deploy Test</h1>
+    <p>Tap buttons to verify touch and click response.</p>
+    
+    <div class="display" id="count">0</div>
+
+    <div class="btn-row">
+      <button id="btn-add">+ Tap Me</button>
+      <button class="reset" id="btn-reset">Reset</button>
+    </div>
+
+    <div class="status" id="status-msg">● Connected & Working</div>
+  </div>
+
+  <script>
+    let counter = 0;
+    const countEl = document.getElementById('count');
+    const statusEl = document.getElementById('status-msg');
+
+    document.getElementById('btn-add').addEventListener('click', () => {
+      counter++;
+      countEl.textContent = counter;
+      statusEl.textContent = `● Registered tap at ${new Date().toLocaleTimeString()}`;
+    });
+
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      counter = 0;
+      countEl.textContent = counter;
+      statusEl.textContent = '● Counter reset';
+    });
+  </script>
+</body>
+</html>
