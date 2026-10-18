@@ -3,178 +3,91 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ledger & Profit Tracker</title>
+<meta name="theme-color" content="#0f766e">
+<title>Profit Tracker by Kisara Rajapaksha</title>
 <style>
-:root {
-  --bg: #f8fafc;
-  --surface: #ffffff;
-  --text: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --primary: #0284c7;
-  --primary-sub: #e0f2fe;
-  --green: #16a34a;
-  --green-sub: #dcfce7;
-  --red: #dc2626;
-  --red-sub: #fee2e2;
-  --amber: #d97706;
-  --amber-sub: #fef3c7;
-  --purple: #7c3aed;
-  --purple-sub: #ede9fe;
-  --radius: 12px;
+:root{
+  --bg:#f4f6f8;--card:#fff;--tx:#12171f;--mu:#667085;--ac:#0f766e;--ac2:#e3f3f1;
+  --gd:#15803d;--rd:#b91c1c;--am:#b45309;--bd:#e4e7ec;--sh:0 1px 3px rgba(16,24,40,.08);
+  --purple:#7c3aed;--purple-bg:rgba(124,58,237,0.12);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)
 }
-:root[data-theme="dark"] {
-  --bg: #090d16;
-  --surface: #131b2e;
-  --text: #f8fafc;
-  --muted: #94a3b8;
-  --border: #243048;
-  --primary: #38bdf8;
-  --primary-sub: rgba(56,189,248,0.12);
-  --green: #4ade80;
-  --green-sub: rgba(74,222,128,0.12);
-  --red: #f87171;
-  --red-sub: rgba(248,113,113,0.12);
-  --amber: #fbbf24;
-  --amber-sub: rgba(251,191,36,0.12);
-  --purple: #a78bfa;
-  --purple-sub: rgba(167,139,250,0.12);
+:root[data-theme="dark"]{
+  --bg:#0d1117;--card:#161b22;--tx:#eef0f3;--mu:#98a2b3;--ac:#2dd4bf;--ac2:#12302d;
+  --gd:#4ade80;--rd:#f87171;--am:#fbbf24;--bd:#262c36;--sh:none;
+  --purple:#a78bfa;--purple-bg:rgba(167,139,250,0.18);
 }
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-body {
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  font-size: 14px;
+:root[data-theme="light"]{
+  --bg:#f4f6f8;--card:#fff;--tx:#12171f;--mu:#667085;--ac:#0f766e;--ac2:#e3f3f1;
+  --gd:#15803d;--rd:#b91c1c;--am:#b45309;--bd:#e4e7ec;--sh:0 1px 3px rgba(16,24,40,.08);
+  --purple:#7c3aed;--purple-bg:rgba(124,58,237,0.12);
 }
-header {
-  padding: 12px 16px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-header h1 { margin: 0; font-size: 16px; font-weight: 700; }
-header small { display: block; font-size: 11px; color: var(--muted); }
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,Roboto,"Segoe UI",sans-serif}
+body{display:flex;flex-direction:column}
+header{padding:14px 16px 8px;display:flex;align-items:center;justify-content:space-between}
+header h1{font-size:19px;margin:0;font-weight:700}
+#main{flex:1;overflow-y:auto;padding:4px 14px 110px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:13px;margin-bottom:11px;box-shadow:var(--sh);transition:border .2s}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.grid .card{margin:0}
+.l{color:var(--mu);font-size:12px;font-weight:500}.v{font-size:19px;font-weight:700;margin-top:2px}
+.g{color:var(--gd)}.r{color:var(--rd)}.a{color:var(--am)}.p-color{color:var(--purple)}
+.bar{height:6px;border-radius:99px;background:var(--bd);overflow:hidden;margin:7px 0}
+.bar i{display:block;height:100%;background:var(--ac);border-radius:99px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:6px}
+h2{font-size:13px;margin:14px 4px 6px;color:var(--mu);font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.pill{font-size:11px;padding:3px 8px;border-radius:99px;background:var(--ac2);color:var(--ac);font-weight:600;white-space:nowrap}
+.pill.w{background:rgba(180,83,9,.14);color:var(--am)}.pill.d{background:rgba(185,28,28,.13);color:var(--rd)}
+.pill.cash{background:rgba(21,128,61,.14);color:var(--gd)}
+.pill.credit{background:rgba(180,83,9,.14);color:var(--am)}
+.pill.special{background:var(--purple-bg);color:var(--purple);font-weight:700}
+.pill.critical{background:var(--rd);color:#fff;font-weight:700;letter-spacing:0.3px}
 
-#main {
-  flex: 1;
-  overflow-y: auto;
-  padding: 14px 14px 100px;
+.card.overdue-critical{
+  border: 2px solid var(--rd) !important;
+  background: rgba(185,28,28,0.04) !important;
+  box-shadow: 0 0 10px rgba(185,28,28,0.18) !important;
+}
+:root[data-theme="dark"] .card.overdue-critical{
+  background: rgba(248,113,113,0.08) !important;
 }
 
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 10px; }
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
-.kpi { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; }
-.kpi .lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--muted); }
-.kpi .val { font-size: 16px; font-weight: 800; margin-top: 2px; }
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--card);border-top:1px solid var(--bd);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));z-index:4}
+nav button{flex:1;background:none;border:0;color:var(--mu);font:inherit;font-size:12px;padding:5px;display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button b{font-size:19px;font-weight:400}nav button.on{color:var(--ac);font-weight:600}
+nav button[data-t="special"].on{color:var(--purple)}
 
-.entry-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 12px;
-  margin-bottom: 8px;
-  cursor: pointer;
-}
-.entry-card.crit { border-color: var(--red); background: var(--red-sub); }
-.entry-top { display: flex; justify-content: space-between; align-items: flex-start; }
-.entry-title { font-size: 14px; font-weight: 700; }
-.entry-meta { display: flex; justify-content: space-between; margin-top: 8px; padding-top: 6px; border-top: 1px solid var(--border); font-size: 12px; }
-
-.pill { display: inline-block; font-size: 10px; font-weight: 700; border-radius: 4px; padding: 2px 6px; text-transform: uppercase; }
-.pill-cash { background: var(--green-sub); color: var(--green); }
-.pill-credit { background: var(--amber-sub); color: var(--amber); }
-.pill-crit { background: var(--red-sub); color: var(--red); }
-.pill-settled { background: var(--border); color: var(--muted); }
-.pill-sp { background: var(--purple-sub); color: var(--purple); }
-
-input, select {
-  width: 100%;
-  padding: 8px 10px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--bg);
-  color: var(--text);
-  font: inherit;
-  font-size: 13px;
-  outline: none;
-}
-input:focus, select:focus { border-color: var(--primary); }
-label { display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin: 8px 0 3px; }
-
-.btn {
-  display: block;
-  width: 100%;
-  border: 0;
-  border-radius: 6px;
-  padding: 10px;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  text-align: center;
-  cursor: pointer;
-  margin-top: 10px;
-  color: #fff;
-  background: var(--primary);
-}
-.btn-sub { background: var(--border); color: var(--text); }
-.btn-del { background: var(--red-sub); color: var(--red); }
-.btn-purple { background: var(--purple); color: #fff; }
-.btn-sm { padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); background: transparent; font-size: 11px; font-weight: 600; cursor: pointer; color: var(--text); }
-
-.dock { position: fixed; right: 14px; bottom: 64px; display: flex; gap: 6px; z-index: 5; }
-.fab { height: 40px; padding: 0 14px; border-radius: 20px; border: 0; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-.fab.sale { background: var(--primary); }
-.fab.buy { background: #334155; }
-.fab.sp { background: var(--purple); }
-
-nav {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  display: flex;
-  padding: 4px 0;
-  z-index: 4;
-}
-nav button {
-  flex: 1;
-  background: none;
-  border: 0;
-  color: var(--muted);
-  padding: 6px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  font-size: 10px;
-  font-weight: 600;
-  cursor: pointer;
-}
-nav button.active { color: var(--primary); }
-nav button[data-tab="special"].active { color: var(--purple); }
-nav button b { font-size: 16px; font-weight: 400; }
-
-.modal-layer { position: fixed; inset: 0; background: rgba(15,23,42,0.6); display: none; align-items: flex-end; z-index: 10; }
-.modal-layer.open { display: flex; }
-.modal-box { background: var(--surface); width: 100%; max-height: 90vh; overflow-y: auto; border-radius: 16px 16px 0 0; padding: 16px; }
-.modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.modal-head h3 { margin: 0; font-size: 16px; font-weight: 700; }
-.modal-close { background: none; border: 0; font-size: 18px; color: var(--muted); cursor: pointer; }
-
-.item-draft { border: 1px dashed var(--border); border-radius: 6px; padding: 8px; margin-bottom: 6px; background: var(--bg); }
-.seg-bar { display: flex; background: var(--border); padding: 3px; border-radius: 6px; gap: 3px; margin-bottom: 10px; }
-.seg-bar button { flex: 1; border: 0; background: none; padding: 6px; border-radius: 4px; font-size: 11px; font-weight: 700; color: var(--muted); cursor: pointer; }
-.seg-bar button.active { background: var(--surface); color: var(--text); }
-.sec-title { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin: 12px 0 6px; }
+.fab-container{position:fixed;right:14px;bottom:calc(72px + env(safe-area-inset-bottom,0px));display:flex;gap:6px;z-index:5}
+.fab{height:44px;padding:0 12px;border-radius:22px;border:0;background:var(--ac);color:#fff;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;font-weight:700;cursor:pointer}
+.fab.p{background:#475569}
+.fab.sp{background:var(--purple)}
+input,textarea,select{width:100%;font:inherit;padding:9px 11px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);color:var(--tx)}
+label{display:block;font-size:11px;color:var(--mu);margin:8px 0 3px;font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.btn{border:0;border-radius:10px;padding:11px 14px;font:inherit;font-weight:600;background:var(--ac);color:#fff;width:100%;margin-top:12px;cursor:pointer}
+.btn.s{background:var(--ac2);color:var(--ac)}.btn.x{background:rgba(185,28,28,.12);color:var(--rd)}
+.btn.sp{background:var(--purple);color:#fff}
+.btn-sm{border:0;border-radius:8px;padding:6px 10px;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;z-index:9}
+.ov.on{display:flex}
+.sheet{background:var(--card);width:100%;max-height:93%;overflow-y:auto;border-radius:20px 20px 0 0;padding:16px 14px calc(24px + env(safe-area-inset-bottom,0px))}
+.sheet h3{margin:0 0 6px;font-size:17px}
+.prev{background:var(--ac2);border-radius:10px;padding:9px 12px;margin-top:10px;font-size:13px}
+.pay{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--bd)}
+.pay button{background:none;border:0;color:var(--rd);font-size:17px;cursor:pointer}
+.empty{text-align:center;color:var(--mu);padding:32px 10px}
+.ib{background:none;border:1px solid var(--bd);color:var(--tx);border-radius:8px;padding:5px 9px;font:inherit;font-size:12px;cursor:pointer}
+.subtag{display:inline-block;font-size:11px;font-family:monospace;background:rgba(0,0,0,0.06);padding:2px 5px;border-radius:5px;margin-left:4px}
+:root[data-theme="dark"] .subtag{background:rgba(255,255,255,0.08)}
+.item-box{border:1px dashed var(--bd);border-radius:10px;padding:10px;margin-bottom:8px;background:rgba(0,0,0,0.01)}
+.date-header{font-size:12px;font-weight:700;color:var(--mu);text-transform:uppercase;margin:18px 4px 6px;display:flex;align-items:center;justify-content:space-between}
+.product-chip{display:inline-flex;align-items:center;background:var(--ac2);color:var(--ac);padding:4px 9px;border-radius:99px;font-size:12px;margin:3px;font-weight:600}
+.product-chip button{background:none;border:0;color:var(--rd);margin-left:6px;cursor:pointer;font-size:14px;padding:0}
+.seg-control{display:flex;background:var(--bg);padding:4px;border-radius:10px;gap:4px;margin-bottom:12px;border:1px solid var(--bd)}
+.seg-btn{flex:1;border:0;background:none;padding:7px;border-radius:7px;font-weight:600;font-size:13px;color:var(--mu);cursor:pointer}
+.seg-btn.on{background:var(--card);color:var(--purple);box-shadow:var(--sh)}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -182,920 +95,1453 @@ nav button b { font-size: 16px; font-weight: 400; }
 </head>
 <body>
 
-<header>
-  <div>
-    <h1>Ledger & Profit Tracker</h1>
-    <small>Independent Books</small>
-  </div>
-  <button class="btn-sm" id="btn-theme">Mode</button>
-</header>
+<datalist id="rx-products"></datalist>
+<datalist id="rx-customers"></datalist>
+<datalist id="rx-suppliers"></datalist>
 
+<header>
+  <div><h1 id="ttl">Profit Tracker</h1><div class="l">by Kisara Rajapaksha</div></div>
+  <button class="ib" id="cs"></button>
+</header>
 <div id="main"></div>
 
-<div class="dock">
-  <button class="fab sp" id="dock-sp">+ Special</button>
-  <button class="fab buy" id="dock-buy">+ Purchase</button>
-  <button class="fab sale" id="dock-sale">+ Sale</button>
+<div class="fab-container">
+  <button class="fab sp" onclick="specialActionPrompt()" title="Special Entry">+Special</button>
+  <button class="fab p" onclick="purchaseForm()" title="Add Regular Purchase">+P</button>
+  <button class="fab" onclick="saleForm()" title="Add Regular Sale">+S</button>
 </div>
 
 <nav>
-  <button data-tab="home" class="active"><b>▦</b>Dashboard</button>
-  <button data-tab="sales"><b>☰</b>Sales</button>
-  <button data-tab="purchases"><b>☷</b>Purchases</button>
-  <button data-tab="special"><b>★</b>Special</button>
-  <button data-tab="settings"><b>⚙</b>Settings</button>
+  <button data-t="home"><b>▦</b>Summary</button>
+  <button data-t="sales"><b>☰</b>Sales</button>
+  <button data-t="purchases"><b>☷</b>Purchases</button>
+  <button data-t="special"><b>★</b>Special</button>
+  <button data-t="more"><b>⚙</b>Settings</button>
 </nav>
 
-<div class="modal-layer" id="modal">
-  <div class="modal-box" id="modal-content"></div>
-</div>
+<div class="ov" id="ov" onclick="if(event.target===this)closeS()"><div class="sheet" id="sh"></div></div>
 
 <script>
-let DB = {
+const DEFAULT_PRODUCTS = [
+  "Amentral", "Nitrocontin 2.6", "Nitrocontin 6.4", "Imodium", "Diamox",
+  "Free Style", "Esparal", "Avomine", "Delay Spray", "Hisone", "Heparest",
+  "Fucidin", "Dermi 5", "Arkamin", "Minoxidil", "Nicotex", "Atarax 25",
+  "Axepta", "Hi sone 10", "Libriam", "Loperamide", "Hi sone 5",
+  "Oselvir 75", "Oselvir 45", "Tramadol"
+];
+
+let S = {
   cur: 'Rs',
   theme: 'system',
   sales: [],
   purchases: [],
   specialSales: [],
   specialPurchases: [],
+  products: [...DEFAULT_PRODUCTS],
+  customers: [],
+  suppliers: [],
   firebaseUrl: ''
 };
 
-let currentTab = 'home';
-let spSubTab = 'sales';
-let searchFilter = '';
-let draftItems = [];
-let fbRef = null;
+let tab = 'home', q = '', qp = '', qsp = '', specialSubTab = 'sales';
+let dbRef = null;
+let isWriting = false;
 
 try {
-  const local = localStorage.getItem('pt_fresh_db_v3');
-  if (local) DB = Object.assign(DB, JSON.parse(local));
+  const r = localStorage.getItem('pt1');
+  if (r) {
+    const parsed = JSON.parse(r);
+    S = {...S, ...parsed};
+    if (!S.sales) S.sales = [];
+    if (!S.purchases) S.purchases = [];
+    if (!S.specialSales) S.specialSales = [];
+    if (!S.specialPurchases) S.specialPurchases = [];
+    if (!S.products || !S.products.length) S.products = [...DEFAULT_PRODUCTS];
+    if (!S.customers) S.customers = [];
+    if (!S.suppliers) S.suppliers = [];
+    if (!S.theme) S.theme = 'system';
+  }
 } catch(e) {}
 
-const $ = sel => document.querySelector(sel);
-const today = () => new Date().toISOString().slice(0, 10);
-const num = v => Number(v) || 0;
-const money = n => DB.cur + ' ' + (Math.round(num(n) * 100) / 100).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const fmtDate = d => {
-  if (!d) return '-';
-  const p = d.split('-');
-  return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : d;
-};
+[...(S.sales||[]), ...(S.specialSales||[])].forEach(s => {
+  if (s.cust && !S.customers.includes(s.cust)) S.customers.push(s.cust);
+});
+[...(S.purchases||[]), ...(S.specialPurchases||[])].forEach(p => {
+  if (p.supplier && !S.suppliers.includes(p.supplier)) S.suppliers.push(p.supplier);
+});
 
-function saveDB() {
-  try { localStorage.setItem('pt_fresh_db_v3', JSON.stringify(DB)); } catch(e){}
-  if (fbRef) {
-    try {
-      fbRef.set({
-        cur: DB.cur,
-        sales: DB.sales,
-        purchases: DB.purchases,
-        specialSales: DB.specialSales,
-        specialPurchases: DB.specialPurchases
-      });
-    } catch(e){}
+const $ = s => document.querySelector(s);
+
+function applyTheme(mode) {
+  const root = document.documentElement;
+  const themeMeta = document.querySelector('meta[name="theme-color"]');
+  if (mode === 'dark') {
+    root.setAttribute('data-theme', 'dark');
+    if (themeMeta) themeMeta.setAttribute('content', '#0d1117');
+  } else if (mode === 'light') {
+    root.setAttribute('data-theme', 'light');
+    if (themeMeta) themeMeta.setAttribute('content', '#0f766e');
+  } else {
+    const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    if (themeMeta) themeMeta.setAttribute('content', isDark ? '#0d1117' : '#0f766e');
   }
 }
 
-function calcSale(s) {
-  const items = (s.items && s.items.length) ? s.items : [{ qty: 1, cost: 0, price: 0 }];
-  let rev = 0, cost = 0;
-  items.forEach(i => {
-    rev += num(i.qty) * num(i.price);
-    cost += num(i.qty) * num(i.cost);
+if (window.matchMedia) {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (S.theme === 'system') applyTheme('system');
   });
-  const paid = (s.pays || []).reduce((a, b) => a + num(b.a), 0);
-  const rem = Math.max(0, Math.round((rev - paid) * 100) / 100);
-  return { rev, cost, profit: rev - cost, paid, rem };
 }
 
-function calcPurchase(p) {
-  const items = (p.items && p.items.length) ? p.items : [{ qty: 1, price: 0 }];
+function setTheme(mode) {
+  S.theme = mode;
+  applyTheme(mode);
+  save();
+}
+
+function initFirebaseSync() {
+  if (!S.firebaseUrl || typeof firebase === 'undefined') return;
+  try {
+    const cleanUrl = S.firebaseUrl.trim().replace(/\/+$/, '');
+    if (!firebase.apps.length) {
+      firebase.initializeApp({ databaseURL: cleanUrl });
+    }
+    dbRef = firebase.database().ref('tracker_data');
+
+    dbRef.on('value', snapshot => {
+      if (isWriting) return;
+      const remoteData = snapshot.val();
+      if (remoteData) {
+        S.sales = Array.isArray(remoteData.sales) ? remoteData.sales : [];
+        S.purchases = Array.isArray(remoteData.purchases) ? remoteData.purchases : [];
+        S.specialSales = Array.isArray(remoteData.specialSales) ? remoteData.specialSales : [];
+        S.specialPurchases = Array.isArray(remoteData.specialPurchases) ? remoteData.specialPurchases : [];
+        if (Array.isArray(remoteData.products) && remoteData.products.length) S.products = remoteData.products;
+        if (Array.isArray(remoteData.customers)) S.customers = remoteData.customers;
+        if (Array.isArray(remoteData.suppliers)) S.suppliers = remoteData.suppliers;
+        if (remoteData.cur) S.cur = remoteData.cur;
+        
+        try { localStorage.setItem('pt1', JSON.stringify(S)); } catch(e) {}
+        render();
+        updateDatalists();
+      }
+    });
+  } catch(e) {
+    console.warn('Firebase init error:', e);
+  }
+}
+
+const save = async () => {
+  try {
+    localStorage.setItem('pt1', JSON.stringify(S));
+  } catch(e) {}
+
+  if (dbRef) {
+    try {
+      isWriting = true;
+      await dbRef.set({
+        cur: S.cur,
+        sales: S.sales,
+        purchases: S.purchases,
+        specialSales: S.specialSales,
+        specialPurchases: S.specialPurchases,
+        products: S.products,
+        customers: S.customers,
+        suppliers: S.suppliers
+      });
+    } catch(err) {
+      console.warn('Database write error:', err);
+    } finally {
+      setTimeout(() => { isWriting = false; }, 300);
+    }
+  }
+  updateDatalists();
+};
+
+function updateDatalists() {
+  const dlp = $('#rx-products');
+  if (dlp) dlp.innerHTML = (S.products || []).map(p => `<option value="${esc(p)}">`).join('');
+  const dlc = $('#rx-customers');
+  if (dlc) dlc.innerHTML = (S.customers || []).map(c => `<option value="${esc(c)}">`).join('');
+  const dls = $('#rx-suppliers');
+  if (dls) dls.innerHTML = (S.suppliers || []).map(s => `<option value="${esc(s)}">`).join('');
+}
+
+const today = () => new Date().toISOString().slice(0, 10);
+const money = n => S.cur + ' ' + (Math.round((Number(n)||0) * 100) / 100).toLocaleString(undefined, {maximumFractionDigits: 2});
+const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fd = d => new Date(d).toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'});
+const daysTo = d => Math.round((new Date(d) - new Date(today())) / 864e5);
+
+function isTwoMonthsOverdue(itemDate, dueDate, rem) {
+  if (rem <= 0.009) return false;
+  const targetDate = dueDate || itemDate;
+  if (!targetDate) return false;
+  const diffDays = Math.round((new Date(today()) - new Date(targetDate)) / 864e5);
+  return diffDays >= 60;
+}
+
+const calcSale = s => {
+  const items = s.items && s.items.length ? s.items : [{qty: s.qty||1, cost: s.cost||0, price: s.price||0}];
+  let cost = 0, rev = 0;
+  items.forEach(it => {
+    cost += (Number(it.cost)||0) * (Number(it.qty)||0);
+    rev += (Number(it.price)||0) * (Number(it.qty)||0);
+  });
+  const paid = (s.pays||[]).reduce((a, p) => a + (Number(p.a)||0), 0);
+  const rem = Math.round((rev - paid) * 100) / 100;
+  const pct = rev ? Math.min(100, (paid / rev) * 100) : 100;
+  return {cost, rev, paid, profit: rev - cost, rem, pct};
+};
+
+const calcPurchase = p => {
+  const items = p.items && p.items.length ? p.items : [{qty: p.qty||1, price: p.price||0}];
   let total = 0;
-  items.forEach(i => { total += num(i.qty) * num(i.price); });
-  const paid = (p.pays || []).reduce((a, b) => a + num(b.a), 0);
-  const rem = Math.max(0, Math.round((total - paid) * 100) / 100);
-  return { total, paid, rem };
+  items.forEach(it => {
+    total += (Number(it.price)||0) * (Number(it.qty)||0);
+  });
+  const paid = (p.pays||[]).reduce((a, x) => a + (Number(x.a)||0), 0);
+  const rem = Math.round((total - paid) * 100) / 100;
+  const pct = total ? Math.min(100, (paid / total) * 100) : 100;
+  return {total, paid, rem, pct};
+};
+
+function duePill(due, rem, itemDate, label='Paid') {
+  if (rem <= 0.009) return `<span class="pill">${label} ✓</span>`;
+  if (isTwoMonthsOverdue(itemDate, due, rem)) {
+    const overdueDays = Math.round((new Date(today()) - new Date(due || itemDate)) / 864e5);
+    return `<span class="pill critical">🚨 ${overdueDays}d OVERDUE (2M+)</span>`;
+  }
+  if (!due) return `<span class="pill d">Unpaid</span>`;
+  const n = daysTo(due);
+  return n < 0 ? `<span class="pill d">${-n}d overdue</span>` : n <= 7 ? `<span class="pill w">due in ${n}d</span>` : `<span class="pill">due ${fd(due)}</span>`;
 }
 
-function evalOverdue(dateStr, dueStr, rem) {
-  if (rem <= 0.009) return { isCrit: false, text: 'Settled' };
-  const target = dueStr || dateStr;
-  if (!target) return { isCrit: false, text: 'Unpaid' };
-  const diff = Math.round((new Date(today()) - new Date(target)) / 864e5);
-  if (diff >= 60) return { isCrit: true, text: `${diff}d Overdue (60d+)` };
-  if (diff > 0) return { isCrit: false, text: `${diff}d Overdue` };
-  return { isCrit: false, text: dueStr ? `Due in ${Math.abs(diff)}d` : 'Pending' };
-}
+function tot(isSpecial = false) {
+  const salesList = isSpecial ? (S.specialSales||[]) : (S.sales||[]);
+  const purchasesList = isSpecial ? (S.specialPurchases||[]) : (S.purchases||[]);
 
-function getMetrics(isSpecial = false) {
-  const sl = isSpecial ? DB.specialSales : DB.sales;
-  const pl = isSpecial ? DB.specialPurchases : DB.purchases;
-  let res = { rev: 0, profit: 0, rec: 0, buyTotal: 0, pay: 0, critCount: 0 };
-  
-  (sl || []).forEach(s => {
+  let t = {cost: 0, rev: 0, paid: 0, profit: 0, receivable: 0, purchasesTotal: 0, purchasesPaid: 0, payable: 0, over2mRec: 0, over2mPay: 0, count2mRec: 0, count2mPay: 0};
+  salesList.forEach(s => {
     const c = calcSale(s);
-    res.rev += c.rev;
-    res.profit += c.profit;
-    res.rec += c.rem;
-    if (evalOverdue(s.date, s.due, c.rem).isCrit) res.critCount++;
+    t.cost += c.cost;
+    t.rev += c.rev;
+    t.paid += c.paid;
+    t.profit += c.profit;
+    const unpaid = Math.max(0, c.rem);
+    t.receivable += unpaid;
+    if (isTwoMonthsOverdue(s.date, s.due, c.rem)) {
+      t.over2mRec += unpaid;
+      t.count2mRec++;
+    }
   });
-  (pl || []).forEach(p => {
-    const c = calcPurchase(p);
-    res.buyTotal += c.total;
-    res.pay += c.rem;
-    if (evalOverdue(p.date, p.due, c.rem).isCrit) res.critCount++;
+  purchasesList.forEach(p => {
+    const cp = calcPurchase(p);
+    t.purchasesTotal += cp.total;
+    t.purchasesPaid += cp.paid;
+    const unpaid = Math.max(0, cp.rem);
+    t.payable += unpaid;
+    if (isTwoMonthsOverdue(p.date, p.due, cp.rem)) {
+      t.over2mPay += unpaid;
+      t.count2mPay++;
+    }
   });
-  return res;
-}
-
-function renderCard(item, kind, isSpecial = false) {
-  const isSale = kind === 'sale';
-  const c = isSale ? calcSale(item) : calcPurchase(item);
-  const ov = evalOverdue(item.date, item.due, c.rem);
-  const title = isSale ? (item.cust || 'Direct Customer') : (item.supplier || 'Direct Supplier');
-  const details = (item.items || []).map(i => `${i.name} ×${i.qty}`).join(' · ') || 'No item detail';
-  const total = isSale ? c.rev : c.total;
-
-  return `
-  <div class="entry-card ${ov.isCrit ? 'crit' : ''}" data-act="open-detail" data-kind="${kind}" data-id="${item.id}" data-sp="${isSpecial}">
-    <div class="entry-top">
-      <div>
-        <span class="entry-title">${esc(title)}</span>
-        ${item.inv ? `<span style="font-family:monospace;font-size:11px;color:var(--muted);background:var(--border);padding:1px 4px;border-radius:4px;margin-left:4px">#${esc(item.inv)}</span>` : ''}
-      </div>
-      <div>
-        <span class="pill ${item.type==='Cash'?'pill-cash':'pill-credit'}">${item.type||'Credit'}</span>
-        ${ov.isCrit ? `<span class="pill pill-crit">${ov.text}</span>` : c.rem <= 0.009 ? `<span class="pill pill-settled">Settled</span>` : `<span class="pill pill-credit">${ov.text}</span>`}
-      </div>
-    </div>
-    <div style="font-size:12px;color:var(--muted);margin-top:4px">${esc(details)}</div>
-    <div class="entry-meta">
-      <span style="color:var(--muted)">${fmtDate(item.date)}${item.due ? ` · Due ${fmtDate(item.due)}` : ''}</span>
-      <div>
-        <span>${money(total)}</span>
-        ${c.rem > 0.009 ? `<span style="font-weight:700;margin-left:6px;color:var(--red)">Bal: ${money(c.rem)}</span>` : `<span style="font-weight:700;margin-left:6px;color:var(--green)">Paid</span>`}
-      </div>
-    </div>
-  </div>`;
-}
-
-function renderGroup(list, kind, isSpecial = false) {
-  if (!list || !list.length) return `<div class="card" style="text-align:center;color:var(--muted);padding:20px">No entries found.</div>`;
-  const map = {};
-  list.forEach(i => {
-    const d = i.date || 'Undated';
-    if (!map[d]) map[d] = [];
-    map[d].push(i);
-  });
-  const dates = Object.keys(map).sort((a,b) => new Date(b) - new Date(a));
-  let out = '';
-  dates.forEach(d => {
-    out += `<div class="sec-title">${d === today() ? 'Today · ' : ''}${fmtDate(d)}</div>`;
-    out += map[d].map(item => renderCard(item, kind, isSpecial)).join('');
-  });
-  return out;
-}
-
-function viewDashboard() {
-  const m = getMetrics(false);
-  const pendingSales = (DB.sales || []).filter(s => calcSale(s).rem > 0.009).slice(0, 5);
-  const pendingBuys = (DB.purchases || []).filter(p => calcPurchase(p).rem > 0.009).slice(0, 5);
-
-  return `
-  ${m.critCount > 0 ? `
-  <div class="card" style="border-color:var(--red);background:var(--red-sub)">
-    <b style="color:var(--red);font-size:13px">🚨 OVERDUE ALERT: ${m.critCount} entries are 60+ days overdue!</b>
-  </div>` : ''}
-
-  <div class="grid-2">
-    <div class="kpi">
-      <div class="lbl">To Collect (Sales)</div>
-      <div class="val" style="color:var(--amber)">${money(m.rec)}</div>
-    </div>
-    <div class="kpi">
-      <div class="lbl">To Pay (Purchases)</div>
-      <div class="val" style="color:var(--red)">${money(m.pay)}</div>
-    </div>
-  </div>
-
-  <div class="grid-2">
-    <div class="kpi"><div class="lbl">Total Sales</div><div class="val">${money(m.rev)}</div></div>
-    <div class="kpi"><div class="lbl">Total Purchases</div><div class="val">${money(m.buyTotal)}</div></div>
-  </div>
-
-  <div class="card" style="display:flex;justify-content:space-between;align-items:center">
-    <div>
-      <div class="lbl">Estimated Profit</div>
-      <div class="val" style="font-size:20px;color:${m.profit>=0?'var(--green)':'var(--red)'}">${money(m.profit)}</div>
-    </div>
-    <button class="btn-sm" id="btn-export-quick">Export Excel</button>
-  </div>
-
-  <div class="sec-title">Pending Collections</div>
-  ${pendingSales.length ? pendingSales.map(s => renderCard(s, 'sale', false)).join('') : '<div class="card" style="color:var(--muted);font-size:12px">No outstanding sales.</div>'}
-
-  <div class="sec-title">Pending Supplier Dues</div>
-  ${pendingBuys.length ? pendingBuys.map(p => renderCard(p, 'purchase', false)).join('') : '<div class="card" style="color:var(--muted);font-size:12px">No outstanding payables.</div>'}
-  `;
-}
-
-function viewSales() {
-  const m = getMetrics(false);
-  const q = searchFilter.trim().toLowerCase();
-  const filtered = (DB.sales || []).filter(s => {
-    return (s.inv || '').toLowerCase().includes(q) || (s.cust || '').toLowerCase().includes(q) || (s.items || []).some(i => (i.name || '').toLowerCase().includes(q));
-  }).sort((a,b) => new Date(b.date) - new Date(a.date));
-
-  return `
-  <div class="grid-2">
-    <div class="kpi"><div class="lbl">Sales Turnover</div><div class="val">${money(m.rev)}</div></div>
-    <div class="kpi"><div class="lbl">Receivable</div><div class="val" style="color:var(--amber)">${money(m.rec)}</div></div>
-  </div>
-  <input type="text" id="inp-search" placeholder="Search customer, invoice, product..." value="${esc(searchFilter)}" style="margin-bottom:8px">
-  <div>${renderGroup(filtered, 'sale', false)}</div>
-  `;
-}
-
-function viewPurchases() {
-  const m = getMetrics(false);
-  const q = searchFilter.trim().toLowerCase();
-  const filtered = (DB.purchases || []).filter(p => {
-    return (p.inv || '').toLowerCase().includes(q) || (p.supplier || '').toLowerCase().includes(q) || (p.items || []).some(i => (i.name || '').toLowerCase().includes(q));
-  }).sort((a,b) => new Date(b.date) - new Date(a.date));
-
-  return `
-  <div class="grid-2">
-    <div class="kpi"><div class="lbl">Purchases Total</div><div class="val">${money(m.buyTotal)}</div></div>
-    <div class="kpi"><div class="lbl">Payable</div><div class="val" style="color:var(--red)">${money(m.pay)}</div></div>
-  </div>
-  <input type="text" id="inp-search" placeholder="Search supplier, bill, item..." value="${esc(searchFilter)}" style="margin-bottom:8px">
-  <div>${renderGroup(filtered, 'purchase', false)}</div>
-  `;
-}
-
-function viewSpecial() {
-  const m = getMetrics(true);
-  const q = searchFilter.trim().toLowerCase();
-  const list = spSubTab === 'sales' ? DB.specialSales : DB.specialPurchases;
-  const filtered = (list || []).filter(item => {
-    const party = (spSubTab === 'sales' ? item.cust : item.supplier) || '';
-    return (item.inv || '').toLowerCase().includes(q) || party.toLowerCase().includes(q) || (item.items || []).some(i => (i.name || '').toLowerCase().includes(q));
-  }).sort((a,b) => new Date(b.date) - new Date(a.date));
-
-  return `
-  <div class="card" style="border-left:3px solid var(--purple)">
-    <b style="color:var(--purple);font-size:13px">★ SPECIAL LEDGER</b>
-    <div style="font-size:12px;color:var(--muted)">Separate records completely isolated from general business.</div>
-  </div>
-
-  <div class="grid-2">
-    <div class="kpi">
-      <div class="lbl">Special Sales</div>
-      <div class="val">${money(m.rev)}</div>
-      <small style="color:var(--muted)">Rec: ${money(m.rec)}</small>
-    </div>
-    <div class="kpi">
-      <div class="lbl">Special Purchases</div>
-      <div class="val">${money(m.buyTotal)}</div>
-      <small style="color:var(--muted)">Pay: ${money(m.pay)}</small>
-    </div>
-  </div>
-
-  <div class="card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-    <div class="lbl">Special Net Profit</div>
-    <div class="val" style="font-size:18px;color:${m.profit>=0?'var(--green)':'var(--red)'}">${money(m.profit)}</div>
-  </div>
-
-  <div class="seg-bar">
-    <button class="${spSubTab==='sales'?'active':''}" id="sp-tab-sales">Special Sales (${(DB.specialSales||[]).length})</button>
-    <button class="${spSubTab==='purchases'?'active':''}" id="sp-tab-purchases">Special Purchases (${(DB.specialPurchases||[]).length})</button>
-  </div>
-
-  <input type="text" id="inp-search" placeholder="Search special operations..." value="${esc(searchFilter)}" style="margin-bottom:8px">
-  <div>${renderGroup(filtered, spSubTab === 'sales' ? 'sale' : 'purchase', true)}</div>
-  `;
-}
-
-function viewSettings() {
-  return `
-  <div class="card">
-    <div style="font-weight:700;margin-bottom:8px">Preferences</div>
-    <div class="grid-2">
-      <div>
-        <label>Theme</label>
-        <select id="cfg-theme">
-          <option value="system" ${DB.theme==='system'?'selected':''}>System Default</option>
-          <option value="light" ${DB.theme==='light'?'selected':''}>Light</option>
-          <option value="dark" ${DB.theme==='dark'?'selected':''}>Dark</option>
-        </select>
-      </div>
-      <div>
-        <label>Currency</label>
-        <input id="cfg-cur" value="${esc(DB.cur)}">
-      </div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div style="font-weight:700">Firebase Realtime Sync</div>
-    <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Connect database URL to sync data instantly with your dad's app.</div>
-    <input id="cfg-firebase" placeholder="https://database.firebaseio.com" value="${esc(DB.firebaseUrl||'')}">
-    <button class="btn btn-sub" id="btn-save-firebase">Connect Firebase</button>
-  </div>
-
-  <div class="card">
-    <div style="font-weight:700;margin-bottom:8px">Backup & Export</div>
-    <button class="btn btn-sub" id="btn-export-full">Export Complete Excel Workbook</button>
-    <button class="btn btn-sub" id="btn-copy-json">Copy JSON Backup String</button>
-    <button class="btn btn-sub" id="btn-paste-json">Restore From JSON String</button>
-  </div>
-  `;
+  return t;
 }
 
 function render() {
-  const main = $('#main');
-  if (currentTab === 'home') main.innerHTML = viewDashboard();
-  else if (currentTab === 'sales') main.innerHTML = viewSales();
-  else if (currentTab === 'purchases') main.innerHTML = viewPurchases();
-  else if (currentTab === 'special') main.innerHTML = viewSpecial();
-  else if (currentTab === 'settings') main.innerHTML = viewSettings();
-
-  document.querySelectorAll('nav button').forEach(b => {
-    b.classList.toggle('active', b.getAttribute('data-tab') === currentTab);
-  });
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.t === tab));
+  $('#cs').textContent = 'Currency: ' + S.cur;
+  if (tab === 'home') $('#main').innerHTML = home();
+  else if (tab === 'sales') $('#main').innerHTML = sales();
+  else if (tab === 'purchases') $('#main').innerHTML = purchases();
+  else if (tab === 'special') $('#main').innerHTML = specialSection();
+  else $('#main').innerHTML = more();
 }
 
-function showModal(html) {
-  $('#modal-content').innerHTML = html;
-  $('#modal').classList.add('open');
-}
-function hideModal() {
-  $('#modal').classList.remove('open');
+function home() {
+  const t = tot(false);
+  const pendSales = (S.sales||[]).map(s => ({s, c: calcSale(s)})).filter(x => x.c.rem > 0.009).sort((a,b) => new Date(a.s.due||a.s.date) - new Date(b.s.due||b.s.date)).slice(0, 10);
+  const pendPurchases = (S.purchases||[]).map(p => ({p, c: calcPurchase(p)})).filter(x => x.c.rem > 0.009).sort((a,b) => new Date(a.p.due||a.p.date) - new Date(b.p.due||b.p.date)).slice(0, 10);
+  const hasCritical = (t.count2mRec > 0 || t.count2mPay > 0);
+
+  return `
+  ${hasCritical ? `
+  <div class="card" style="border: 2px solid var(--rd); background: rgba(185,28,28,0.06); padding: 14px; margin-bottom: 12px;">
+    <div class="row" style="margin-bottom:6px">
+      <b style="color:var(--rd); font-size:14px">🚨 CRITICAL 2-MONTH (60d+) OVERDUE ALERT</b>
+      <span class="pill critical">${t.count2mRec + t.count2mPay} Overdue</span>
+    </div>
+    <div class="two" style="font-size:13px; margin-top:8px">
+      <div><b>Overdue Receivables:</b> <span class="r">${money(t.over2mRec)}</span> (${t.count2mRec} entries)</div>
+      <div><b>Overdue Payables:</b> <span class="r">${money(t.over2mPay)}</span> (${t.count2mPay} entries)</div>
+    </div>
+  </div>
+  ` : ''}
+
+  <div class="grid">
+    <div class="card" style="border-left: 4px solid var(--gd);">
+      <div class="l">TO RECEIVE (RECEIVABLES)</div>
+      <div class="v ${t.receivable>0?'a':'g'}">${money(t.receivable)}</div>
+    </div>
+    <div class="card" style="border-left: 4px solid var(--rd);">
+      <div class="l">TO PAY (PAYABLES)</div>
+      <div class="v ${t.payable>0?'r':'g'}">${money(t.payable)}</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card" style="border-top: 4px solid var(--ac)">
+      <div class="l">TOTAL SALES</div>
+      <div class="v">${money(t.rev)}</div>
+    </div>
+    <div class="card" style="border-top: 4px solid #475569">
+      <div class="l">TOTAL PURCHASES</div>
+      <div class="v">${money(t.purchasesTotal)}</div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left: 4px solid var(--ac); padding: 14px; margin-bottom: 14px;">
+    <div class="l">TOTAL PROFIT (REGULAR)</div>
+    <div class="v ${t.profit>=0?'g':'r'}" style="font-size:24px;">${money(t.profit)}</div>
+  </div>
+
+  <h2>Pending Customer Collections</h2>
+  ${pendSales.length ? pendSales.map(x => rowSale(x.s, x.c, false)).join('') : '<div class="card empty" style="padding:16px">No pending customer collections 🎉</div>'}
+
+  <h2>Pending Supplier Payments</h2>
+  ${pendPurchases.length ? pendPurchases.map(x => rowPurchase(x.p, x.c, false)).join('') : '<div class="card empty" style="padding:16px">No pending supplier payments 🎉</div>'}
+  
+  <button class="btn s" onclick="exportXlsx()">⬇ Export All to Excel</button>`;
 }
 
-function renderDraftRows(isSale) {
-  const cont = $('#draft-wrap');
-  if (!cont) return;
-  cont.innerHTML = draftItems.map((item, idx) => `
-    <div class="item-draft">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-        <span style="font-size:11px;font-weight:700">Item #${idx+1}</span>
-        ${draftItems.length > 1 ? `<button class="btn-sm" style="color:var(--red)" data-act="del-draft-row" data-idx="${idx}">✕</button>` : ''}
+function getItemNamesSummary(items) {
+  if (!items || !items.length) return 'No items recorded';
+  return items.map(it => `${esc(it.name || 'Item')} (${it.qty} × ${money(it.price)})`).join(', ');
+}
+
+function rowSale(s, c, isSpecial = false) {
+  const itemSummary = getItemNamesSummary(s.items);
+  const typePill = s.type === 'Cash' ? '<span class="pill cash">Cash</span>' : '<span class="pill credit">Credit</span>';
+  const specialPill = isSpecial ? '<span class="pill special">★ Special</span>' : '';
+  const isCritical = isTwoMonthsOverdue(s.date, s.due, c.rem);
+  const customerName = s.cust && s.cust.trim() ? esc(s.cust) : 'Walk-in Customer';
+
+  return `<div class="card ${isCritical ? 'overdue-critical' : ''}" onclick="detailSale('${s.id}', ${isSpecial})">
+    <div class="row">
+      <div>
+        <b style="font-size:16px; color:var(--tx);">${customerName}</b>
+        ${s.inv ? `<span class="subtag">INV: ${esc(s.inv)}</span>` : ''}
       </div>
-      <input placeholder="Product / Item name" data-act="inp-draft-name" data-idx="${idx}" value="${esc(item.name)}">
-      ${isSale ? `
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:4px">
-        <input type="number" inputmode="decimal" placeholder="Qty" data-act="inp-draft-qty" data-idx="${idx}" value="${item.qty}">
-        <input type="number" inputmode="decimal" placeholder="Cost" data-act="inp-draft-cost" data-idx="${idx}" value="${item.cost}">
-        <input type="number" inputmode="decimal" placeholder="Price" data-act="inp-draft-price" data-idx="${idx}" value="${item.price}">
-      </div>` : `
-      <div class="grid-2" style="margin-top:4px">
-        <input type="number" inputmode="decimal" placeholder="Quantity" data-act="inp-draft-qty" data-idx="${idx}" value="${item.qty}">
-        <input type="number" inputmode="decimal" placeholder="Price" data-act="inp-draft-price" data-idx="${idx}" value="${item.price}">
-      </div>`}
+      <div>${specialPill} ${typePill} ${duePill(s.due, c.rem, s.date)}</div>
+    </div>
+    
+    <div class="l" style="margin-top:4px; font-size:12px; line-height:1.35; color:var(--mu);">
+      📦 ${itemSummary}
+    </div>
+    <div class="l" style="font-size:11px; margin-top:2px;">
+      📅 ${fd(s.date)}${s.due ? ` · Due: ${fd(s.due)}` : ''}
+    </div>
+
+    <div class="bar"><i style="width:${c.pct}%; ${isSpecial?'background:var(--purple)':''}"></i></div>
+    <div class="row"><span class="l">Total: ${money(c.rev)}</span><span class="${c.rem>0.009?'a':'g'}"><b>Unpaid: ${money(Math.max(0, c.rem))}</b></span></div>
+  </div>`;
+}
+
+function rowPurchase(p, c, isSpecial = false) {
+  const itemSummary = getItemNamesSummary(p.items);
+  const typePill = p.type === 'Cash' ? '<span class="pill cash">Cash</span>' : '<span class="pill credit">Credit</span>';
+  const specialPill = isSpecial ? '<span class="pill special">★ Special</span>' : '';
+  const isCritical = isTwoMonthsOverdue(p.date, p.due, c.rem);
+  const supplierName = p.supplier && p.supplier.trim() ? esc(p.supplier) : 'Direct Supplier';
+
+  return `<div class="card ${isCritical ? 'overdue-critical' : ''}" onclick="detailPurchase('${p.id}', ${isSpecial})">
+    <div class="row">
+      <div>
+        <b style="font-size:16px; color:var(--tx);">${supplierName}</b>
+        ${p.inv ? `<span class="subtag">BILL: ${esc(p.inv)}</span>` : ''}
+      </div>
+      <div>${specialPill} ${typePill} ${duePill(p.due, c.rem, p.date, 'Settled')}</div>
+    </div>
+
+    <div class="l" style="margin-top:4px; font-size:12px; line-height:1.35; color:var(--mu);">
+      📦 ${itemSummary}
+    </div>
+    <div class="l" style="font-size:11px; margin-top:2px;">
+      📅 ${fd(p.date)}${p.due ? ` · Due: ${fd(p.due)}` : ''}
+    </div>
+
+    <div class="bar"><i style="width:${c.pct}%;background:${isSpecial?'var(--purple)':'#475569'}"></i></div>
+    <div class="row"><span class="l">Total: ${money(c.total)}</span><span class="${c.rem>0.009?'r':'g'}"><b>Owed: ${money(Math.max(0, c.rem))}</b></span></div>
+  </div>`;
+}
+
+function renderGroupedList(items, isSale = true, isSpecial = false) {
+  if (!items.length) return '<div class="empty">No entries found.</div>';
+  const groups = {};
+  items.forEach(it => {
+    const d = it.date || 'Unknown';
+    if (!groups[d]) groups[d] = [];
+    groups[d].push(it);
+  });
+
+  const sortedDates = Object.keys(groups).sort((a,b) => new Date(b) - new Date(a));
+  let html = '';
+  sortedDates.forEach(dateStr => {
+    const groupItems = groups[dateStr];
+    let groupTotal = 0;
+    groupItems.forEach(x => {
+      const c = isSale ? calcSale(x) : calcPurchase(x);
+      groupTotal += isSale ? c.rev : c.total;
+    });
+
+    const isToday = dateStr === today();
+    const dateLabel = isToday ? 'Today · ' + fd(dateStr) : fd(dateStr);
+
+    html += `
+      <div class="date-header">
+        <span>📅 ${dateLabel} (${groupItems.length})</span>
+        <span>${money(groupTotal)}</span>
+      </div>
+    `;
+    html += groupItems.map(item => isSale ? rowSale(item, calcSale(item), isSpecial) : rowPurchase(item, calcPurchase(item), isSpecial)).join('');
+  });
+  return html;
+}
+
+function sales() {
+  const t = tot(false);
+  const searchLower = q.toLowerCase();
+  const filtered = (S.sales||[]).filter(s => {
+    const invMatch = (s.inv||'').toLowerCase().includes(searchLower);
+    const custMatch = (s.cust||'').toLowerCase().includes(searchLower);
+    const itemMatch = (s.items||[]).some(it => (it.name||'').toLowerCase().includes(searchLower));
+    return invMatch || custMatch || itemMatch;
+  }).sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  return `
+  <div class="card" style="border-left: 4px solid var(--gd); margin-bottom: 12px;">
+    <div class="row">
+      <div>
+        <div class="l">TOTAL RECEIVED FROM CUSTOMERS</div>
+        <div class="v g">${money(t.paid)}</div>
+      </div>
+      <div class="l">Sales: ${money(t.rev)}</div>
+    </div>
+  </div>
+
+  <input placeholder="🔍 Search Sales by Invoice #, Customer, or Product..." value="${esc(q)}" oninput="q=this.value;renderSalesList()" style="margin-bottom:10px">
+  <div id="lst">${renderGroupedList(filtered, true, false)}</div>`;
+}
+
+function renderSalesList() {
+  const searchLower = q.toLowerCase();
+  const filtered = (S.sales||[]).filter(s => {
+    const invMatch = (s.inv||'').toLowerCase().includes(searchLower);
+    const custMatch = (s.cust||'').toLowerCase().includes(searchLower);
+    const itemMatch = (s.items||[]).some(it => (it.name||'').toLowerCase().includes(searchLower));
+    return invMatch || custMatch || itemMatch;
+  }).sort((a,b) => new Date(b.date) - new Date(a.date));
+  const el = $('#lst');
+  if (el) el.innerHTML = renderGroupedList(filtered, true, false);
+}
+
+function purchases() {
+  const t = tot(false);
+  const searchLower = qp.toLowerCase();
+  const filtered = (S.purchases||[]).filter(p => {
+    const invMatch = (p.inv||'').toLowerCase().includes(searchLower);
+    const suppMatch = (p.supplier||'').toLowerCase().includes(searchLower);
+    const itemMatch = (p.items||[]).some(it => (it.name||'').toLowerCase().includes(searchLower));
+    return invMatch || suppMatch || itemMatch;
+  }).sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  return `
+  <div class="card" style="border-left: 4px solid #475569; margin-bottom: 12px;">
+    <div class="row">
+      <div>
+        <div class="l">TOTAL PAID TO SUPPLIERS</div>
+        <div class="v g">${money(t.purchasesPaid)}</div>
+      </div>
+      <div class="l">Purchases: ${money(t.purchasesTotal)}</div>
+    </div>
+  </div>
+
+  <input placeholder="🔍 Search Purchases by Invoice #, Supplier, or Item..." value="${esc(qp)}" oninput="qp=this.value;renderPurchasesList()" style="margin-bottom:10px">
+  <div id="plst">${renderGroupedList(filtered, false, false)}</div>`;
+}
+
+function renderPurchasesList() {
+  const searchLower = qp.toLowerCase();
+  const filtered = (S.purchases||[]).filter(p => {
+    const invMatch = (p.inv||'').toLowerCase().includes(searchLower);
+    const suppMatch = (p.supplier||'').toLowerCase().includes(searchLower);
+    const itemMatch = (p.items||[]).some(it => (it.name||'').toLowerCase().includes(searchLower));
+    return invMatch || suppMatch || itemMatch;
+  }).sort((a,b) => new Date(b.date) - new Date(a.date));
+  const el = $('#plst');
+  if (el) el.innerHTML = renderGroupedList(filtered, false, false);
+}
+
+// ==================== SPECIAL SECTION ====================
+function specialSection() {
+  const st = tot(true);
+  return `
+  <div class="card" style="border-left: 4px solid var(--purple); background: var(--card); margin-bottom: 12px;">
+    <div class="row">
+      <div>
+        <b style="font-size:16px; color:var(--purple);">★ SPECIAL SECTION</b>
+        <div class="l">Independent ledger isolated from regular accounts</div>
+      </div>
+      <div style="display:flex;gap:4px">
+        <button class="btn-sm sp" onclick="saleForm('', true)">+ Sp. Sale</button>
+        <button class="btn-sm" style="background:#475569;color:#fff" onclick="purchaseForm('', true)">+ Sp. Buy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card" style="border-top: 3px solid var(--purple)">
+      <div class="l">SPECIAL SALES</div>
+      <div class="v">${money(st.rev)}</div>
+      <div class="l" style="margin-top:4px">Rec: <b class="${st.receivable>0?'a':'g'}">${money(st.receivable)}</b></div>
+    </div>
+    <div class="card" style="border-top: 3px solid #475569">
+      <div class="l">SPECIAL PURCHASES</div>
+      <div class="v">${money(st.purchasesTotal)}</div>
+      <div class="l" style="margin-top:4px">Pay: <b class="${st.payable>0?'r':'g'}">${money(st.payable)}</b></div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left: 4px solid var(--purple); margin-bottom: 12px;">
+    <div class="l">SPECIAL NET PROFIT</div>
+    <div class="v ${st.profit>=0?'g':'r'}" style="font-size:22px;">${money(st.profit)}</div>
+  </div>
+
+  <div class="seg-control">
+    <button class="seg-btn ${specialSubTab==='sales'?'on':''}" onclick="specialSubTab='sales';renderSpecialList()">Special Sales (${(S.specialSales||[]).length})</button>
+    <button class="seg-btn ${specialSubTab==='purchases'?'on':''}" onclick="specialSubTab='purchases';renderSpecialList()">Special Purchases (${(S.specialPurchases||[]).length})</button>
+  </div>
+
+  <input placeholder="🔍 Search Special Entries..." value="${esc(qsp)}" oninput="qsp=this.value;renderSpecialList()" style="margin-bottom:10px">
+  <div id="sp-list"></div>
+  `;
+}
+
+function renderSpecialList() {
+  const container = $('#sp-list');
+  if (!container) {
+    if (tab === 'special') render();
+    return;
+  }
+  const searchLower = qsp.toLowerCase();
+  if (specialSubTab === 'sales') {
+    const filtered = (S.specialSales||[]).filter(s => {
+      const invMatch = (s.inv||'').toLowerCase().includes(searchLower);
+      const custMatch = (s.cust||'').toLowerCase().includes(searchLower);
+      const itemMatch = (s.items||[]).some(it => (it.name||'').toLowerCase().includes(searchLower));
+      return invMatch || custMatch || itemMatch;
+    }).sort((a,b) => new Date(b.date) - new Date(a.date));
+    container.innerHTML = renderGroupedList(filtered, true, true);
+  } else {
+    const filtered = (S.specialPurchases||[]).filter(p => {
+      const invMatch = (p.inv||'').toLowerCase().includes(searchLower);
+      const suppMatch = (p.supplier||'').toLowerCase().includes(searchLower);
+      const itemMatch = (p.items||[]).some(it => (it.name||'').toLowerCase().includes(searchLower));
+      return invMatch || suppMatch || itemMatch;
+    }).sort((a,b) => new Date(b.date) - new Date(a.date));
+    container.innerHTML = renderGroupedList(filtered, false, true);
+  }
+}
+
+function specialActionPrompt() {
+  openS(`
+    <h3>Add Special Transaction</h3>
+    <p class="l">Choose what you want to add to the independent Special section:</p>
+    <button class="btn sp" onclick="closeS(); saleForm('', true)">★ Add Special Sale</button>
+    <button class="btn" style="background:#475569; color:#fff; margin-top:8px" onclick="closeS(); purchaseForm('', true)">★ Add Special Purchase</button>
+    <button class="btn s" onclick="closeS()" style="margin-top:12px">Cancel</button>
+  `);
+}
+
+function more() {
+  return `
+  <div class="card">
+    <b>🎨 Theme Appearance</b>
+    <label>Select Display Mode</label>
+    <select id="th_mode" onchange="setTheme(this.value)">
+      <option value="system" ${S.theme==='system'?'selected':''}>System Default (Follow Device)</option>
+      <option value="light" ${S.theme==='light'?'selected':''}>Light Mode</option>
+      <option value="dark" ${S.theme==='dark'?'selected':''}>Dark Mode</option>
+    </select>
+  </div>
+
+  <div class="card" style="border-left: 4px solid var(--ac);">
+    <div class="row" style="margin-bottom: 8px;">
+      <div>
+        <b>Products Database</b>
+        <div class="l">${(S.products||[]).length} products saved</div>
+      </div>
+      <button class="btn-sm s" onclick="openProductManager()">➕ Manage Products</button>
+    </div>
+    <div class="row" style="margin-bottom: 8px; border-top: 1px solid var(--bd); padding-top: 8px;">
+      <div>
+        <b>Customers Directory</b>
+        <div class="l">${(S.customers||[]).length} customers saved</div>
+      </div>
+      <button class="btn-sm s" onclick="openCustomerManager()">➕ Manage Customers</button>
+    </div>
+    <div class="row" style="border-top: 1px solid var(--bd); padding-top: 8px;">
+      <div>
+        <b>Suppliers Directory</b>
+        <div class="l">${(S.suppliers||[]).length} suppliers saved</div>
+      </div>
+      <button class="btn-sm s" onclick="openSupplierManager()">➕ Manage Suppliers</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <b>📱 Live Multi-Phone Sync</b>
+    <p class="l">Instant synchronization across phones via Firebase Realtime Database.</p>
+    <label>Firebase Database URL</label>
+    <input id="sync_url" value="${esc(S.firebaseUrl||'')}" placeholder="https://your-app-default-rtdb.firebaseio.com">
+    <button class="btn s" onclick="saveCloudSync()">Save &amp; Connect Sync</button>
+  </div>
+
+  <div class="card">
+    <b>Export to Excel</b>
+    <p class="l">Creates a spreadsheet with regular &amp; special sales, purchases, cheque payment remarks, and summaries.</p>
+    <button class="btn s" onclick="exportXlsx()">⬇ Export to Excel</button>
+  </div>
+
+  <div class="card">
+    <b>Backup &amp; Restore</b>
+    <p class="l">Manual backup data string. Copy this text to transfer your database manually.</p>
+    <textarea id="bk" rows="5">${esc(JSON.stringify(S))}</textarea>
+    <div class="two" style="margin-top:8px">
+      <button class="btn s" style="margin-top:0" onclick="cp()">Copy Backup</button>
+      <button class="btn" style="margin-top:0" onclick="rs()">Restore</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <b>Currency Symbol</b>
+    <input id="cur" value="${esc(S.cur)}" style="margin-top:8px" onchange="S.cur=this.value||'Rs';save();render()">
+  </div>`;
+}
+
+function saveCloudSync() {
+  const url = $('#sync_url').value.trim();
+  S.firebaseUrl = url;
+  save();
+  alert(url ? 'Sync URL saved! Connecting instant listener...' : 'Cloud sync disabled.');
+  initFirebaseSync();
+}
+
+function openProductManager() {
+  openS(`
+    <h3>Manage Products</h3>
+    <label>Add New Product Name</label>
+    <div class="two">
+      <input id="new_prod_name" placeholder="e.g. Panadol 500mg">
+      <button class="btn" style="margin-top:0" onclick="addNewProduct()">Add</button>
+    </div>
+    <div style="margin-top:14px"><b>Current Products (${(S.products||[]).length})</b></div>
+    <div style="max-height:280px;overflow-y:auto;margin-top:8px">
+      ${(S.products||[]).map((p, idx) => `
+        <span class="product-chip">
+          ${esc(p)}
+          <button onclick="removeProduct(${idx})">✕</button>
+        </span>
+      `).join('')}
+    </div>
+    <button class="btn s" onclick="closeS()">Done</button>
+  `);
+}
+
+function addNewProduct() {
+  const name = $('#new_prod_name').value.trim();
+  if (!name) return;
+  if (!S.products.includes(name)) {
+    S.products.push(name);
+    S.products.sort();
+    save();
+    openProductManager();
+  } else {
+    alert('This product already exists.');
+  }
+}
+
+function removeProduct(idx) {
+  if (!confirm('Remove this product?')) return;
+  S.products.splice(idx, 1);
+  save();
+  openProductManager();
+}
+
+function openCustomerManager() {
+  openS(`
+    <h3>Manage Customers</h3>
+    <label>Add New Customer Name</label>
+    <div class="two">
+      <input id="new_cust_name" placeholder="e.g. John Doe / Apex Pharmacy">
+      <button class="btn" style="margin-top:0" onclick="addNewCustomer()">Add</button>
+    </div>
+    <div style="margin-top:14px"><b>Registered Customers (${(S.customers||[]).length})</b></div>
+    <div style="max-height:280px;overflow-y:auto;margin-top:8px">
+      ${(S.customers||[]).length ? (S.customers||[]).map((c, idx) => `
+        <span class="product-chip">
+          ${esc(c)}
+          <button onclick="removeCustomer(${idx})">✕</button>
+        </span>
+      `).join('') : '<div class="l">No saved customers yet.</div>'}
+    </div>
+    <button class="btn s" onclick="closeS()">Done</button>
+  `);
+}
+
+function addNewCustomer() {
+  const name = $('#new_cust_name').value.trim();
+  if (!name) return;
+  if (!S.customers.includes(name)) {
+    S.customers.push(name);
+    S.customers.sort();
+    save();
+    openCustomerManager();
+  } else {
+    alert('Customer already exists in list.');
+  }
+}
+
+function removeCustomer(idx) {
+  if (!confirm('Remove this customer from suggestions?')) return;
+  S.customers.splice(idx, 1);
+  save();
+  openCustomerManager();
+}
+
+function openSupplierManager() {
+  openS(`
+    <h3>Manage Suppliers</h3>
+    <label>Add New Supplier Name</label>
+    <div class="two">
+      <input id="new_supp_name" placeholder="e.g. MedDistributors Ltd">
+      <button class="btn" style="margin-top:0" onclick="addNewSupplier()">Add</button>
+    </div>
+    <div style="margin-top:14px"><b>Registered Suppliers (${(S.suppliers||[]).length})</b></div>
+    <div style="max-height:280px;overflow-y:auto;margin-top:8px">
+      ${(S.suppliers||[]).length ? (S.suppliers||[]).map((s, idx) => `
+        <span class="product-chip">
+          ${esc(s)}
+          <button onclick="removeSupplier(${idx})">✕</button>
+        </span>
+      `).join('') : '<div class="l">No saved suppliers yet.</div>'}
+    </div>
+    <button class="btn s" onclick="closeS()">Done</button>
+  `);
+}
+
+function addNewSupplier() {
+  const name = $('#new_supp_name').value.trim();
+  if (!name) return;
+  if (!S.suppliers.includes(name)) {
+    S.suppliers.push(name);
+    S.suppliers.sort();
+    save();
+    openSupplierManager();
+  } else {
+    alert('Supplier already exists in list.');
+  }
+}
+
+function removeSupplier(idx) {
+  if (!confirm('Remove this supplier from suggestions?')) return;
+  S.suppliers.splice(idx, 1);
+  save();
+  openSupplierManager();
+}
+
+function cp() {
+  const t = $('#bk');
+  t.select();
+  navigator.clipboard.writeText(t.value);
+  alert('Backup copied to clipboard');
+}
+
+function rs() {
+  try {
+    const d = JSON.parse($('#bk').value);
+    if (!Array.isArray(d.sales)) throw 0;
+    if (confirm('Replace current database with this backup?')) {
+      S = d;
+      if (!S.sales) S.sales = [];
+      if (!S.purchases) S.purchases = [];
+      if (!S.specialSales) S.specialSales = [];
+      if (!S.specialPurchases) S.specialPurchases = [];
+      if (!S.products) S.products = [...DEFAULT_PRODUCTS];
+      if (!S.customers) S.customers = [];
+      if (!S.suppliers) S.suppliers = [];
+      if (!S.theme) S.theme = 'system';
+      applyTheme(S.theme);
+      save();
+      render();
+    }
+  } catch(e) {
+    alert('Invalid backup format.');
+  }
+}
+
+function openS(h) {
+  $('#sh').innerHTML = h;
+  $('#ov').classList.add('on');
+}
+function closeS() {
+  $('#ov').classList.remove('on');
+}
+
+let saleItemDrafts = [];
+function renderSaleItemRows() {
+  const container = $('#sale-items-wrap');
+  if (!container) return;
+  container.innerHTML = saleItemDrafts.map((it, idx) => `
+    <div class="item-box">
+      <div class="row" style="margin-bottom:6px">
+        <b>Item #${idx+1}</b>
+        ${saleItemDrafts.length>1 ? `<button type="button" class="btn-sm x" onclick="removeSaleItem(${idx})">Remove</button>` : ''}
+      </div>
+      <label>Product Name</label>
+      <input list="rx-products" value="${esc(it.name)}" oninput="saleItemDrafts[${idx}].name=this.value;pvSaleForm()" placeholder="Select or type product">
+      <div class="three">
+        <div><label>Qty</label><input type="number" inputmode="decimal" value="${it.qty}" oninput="saleItemDrafts[${idx}].qty=this.value;pvSaleForm()"></div>
+        <div><label>Cost</label><input type="number" inputmode="decimal" value="${it.cost}" oninput="saleItemDrafts[${idx}].cost=this.value;pvSaleForm()"></div>
+        <div><label>Price</label><input type="number" inputmode="decimal" value="${it.price}" oninput="saleItemDrafts[${idx}].price=this.value;pvSaleForm()"></div>
+      </div>
     </div>
   `).join('');
+  pvSaleForm();
 }
 
-function openSaleForm(id = null, isSpecial = false) {
-  const list = isSpecial ? DB.specialSales : DB.sales;
-  const s = id ? list.find(x => x.id === id) : null;
-  draftItems = (s && s.items && s.items.length) ? JSON.parse(JSON.stringify(s.items)) : [{ name: '', qty: 1, cost: '', price: '' }];
+function addSaleItemRow() {
+  saleItemDrafts.push({name: '', qty: 1, cost: '', price: ''});
+  renderSaleItemRows();
+}
 
-  showModal(`
-  <div class="modal-head">
-    <h3>${id ? 'Edit Sale' : (isSpecial ? '★ New Special Sale' : 'New Sale')}</h3>
-    <button class="modal-close" data-act="close-modal">✕</button>
-  </div>
-  <div class="grid-2">
-    <div><label>Invoice Number</label><input id="form-inv" placeholder="e.g. 1042" value="${esc(s ? s.inv : '')}"></div>
+function removeSaleItem(idx) {
+  if (saleItemDrafts.length <= 1) return;
+  saleItemDrafts.splice(idx, 1);
+  renderSaleItemRows();
+}
+
+function saleForm(id, isSpecial = false) {
+  const list = isSpecial ? (S.specialSales||[]) : (S.sales||[]);
+  const s = list.find(x => x.id === id);
+  if (s && s.items && s.items.length) {
+    saleItemDrafts = JSON.parse(JSON.stringify(s.items));
+  } else if (s) {
+    saleItemDrafts = [{name: s.name||'', qty: s.qty||1, cost: s.cost||'', price: s.price||''}];
+  } else {
+    saleItemDrafts = [{name: '', qty: 1, cost: '', price: ''}];
+  }
+  const type = s ? (s.type||'Credit') : 'Credit';
+  const inv = s ? (s.inv||'') : '';
+  const cust = s ? (s.cust||'') : '';
+  const date = s ? (s.date||today()) : today();
+  const due = s ? (s.due||'') : '';
+
+  openS(`<h3>${id ? (isSpecial ? 'Edit Special Sale' : 'Edit Sale') : (isSpecial ? '★ New Special Sale' : 'New Sale')}</h3>
+  <div class="two">
+    <div><label>Invoice Number</label><input id="fi" value="${esc(inv)}" placeholder="e.g. INV-1001"></div>
     <div><label>Sale Type</label>
-      <select id="form-type">
-        <option value="Credit" ${s && s.type==='Credit'?'selected':''}>Credit</option>
-        <option value="Cash" ${s && s.type==='Cash'?'selected':''}>Cash</option>
+      <select id="ft">
+        <option value="Credit" ${type==='Credit'?'selected':''}>Credit Sale</option>
+        <option value="Cash" ${type==='Cash'?'selected':''}>Cash Sale</option>
       </select>
     </div>
   </div>
-  <div class="grid-2">
-    <div><label>Customer Name</label><input id="form-party" placeholder="Name" value="${esc(s ? s.cust : '')}"></div>
-    <div><label>Date</label><input id="form-date" type="date" value="${s ? s.date : today()}"></div>
+  <div class="two">
+    <div><label>Customer Name</label><input id="fc" list="rx-customers" value="${esc(cust)}" placeholder="Select or type customer"></div>
+    <div><label>Sale Date</label><input id="fd" type="date" value="${date}"></div>
   </div>
-  <div><label>Due Date (Optional)</label><input id="form-due" type="date" value="${s ? (s.due||'') : ''}"></div>
-
-  <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 4px">
-    <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">Line Items</span>
-    <button class="btn-sm" id="btn-add-line">+ Add Item</button>
+  <div id="due-wrap"><label>Payment Due Date (Optional)</label><input id="fu" type="date" value="${due}"></div>
+  
+  <div style="margin:10px 0 6px" class="row">
+    <b>Products / Items</b>
+    <button type="button" class="btn-sm s" onclick="addSaleItemRow()">+ Add Another Item</button>
   </div>
-  <div id="draft-wrap"></div>
+  <div id="sale-items-wrap"></div>
 
-  ${!id ? `<label>Initial Received Payment</label><input id="form-init-pay" type="number" inputmode="decimal" placeholder="0">` : ''}
-  <button class="btn ${isSpecial?'btn-purple':''}" id="btn-save-sale" data-id="${id||''}" data-sp="${isSpecial}">Save Entry</button>
-  `);
+  ${id ? '' : '<label>Received Immediately</label><input id="fr" type="number" inputmode="decimal" placeholder="0" oninput="pvSaleForm()">' }
+  <div class="prev" id="pv_sale"></div>
+  <button class="btn ${isSpecial?'sp':''}" onclick="saveSale('${id||''}', ${isSpecial})">Save ${isSpecial ? 'Special Sale' : 'Sale'}</button>
+  <button class="btn s" onclick="closeS()">Cancel</button>`);
 
-  renderDraftRows(true);
+  renderSaleItemRows();
+  $('#ft').onchange = () => {
+    const isCash = $('#ft').value === 'Cash';
+    if (isCash && $('#fr')) {
+      let totalRev = 0;
+      saleItemDrafts.forEach(it => { totalRev += (Number(it.qty)||0) * (Number(it.price)||0); });
+      $('#fr').value = totalRev || '';
+    }
+    pvSaleForm();
+  };
 }
 
-function openPurchaseForm(id = null, isSpecial = false) {
-  const list = isSpecial ? DB.specialPurchases : DB.purchases;
-  const p = id ? list.find(x => x.id === id) : null;
-  draftItems = (p && p.items && p.items.length) ? JSON.parse(JSON.stringify(p.items)) : [{ name: '', qty: 1, price: '' }];
-
-  showModal(`
-  <div class="modal-head">
-    <h3>${id ? 'Edit Purchase' : (isSpecial ? '★ New Special Purchase' : 'New Purchase')}</h3>
-    <button class="modal-close" data-act="close-modal">✕</button>
-  </div>
-  <div class="grid-2">
-    <div><label>Bill / Ref #</label><input id="form-inv" placeholder="e.g. B-99" value="${esc(p ? p.inv : '')}"></div>
-    <div><label>Type</label>
-      <select id="form-type">
-        <option value="Credit" ${p && p.type==='Credit'?'selected':''}>Credit</option>
-        <option value="Cash" ${p && p.type==='Cash'?'selected':''}>Cash</option>
-      </select>
-    </div>
-  </div>
-  <div class="grid-2">
-    <div><label>Supplier Name</label><input id="form-party" placeholder="Name" value="${esc(p ? p.supplier : '')}"></div>
-    <div><label>Date</label><input id="form-date" type="date" value="${p ? p.date : today()}"></div>
-  </div>
-  <div><label>Due Date (Optional)</label><input id="form-due" type="date" value="${p ? (p.due||'') : ''}"></div>
-
-  <div style="display:flex;justify-content:space-between;align-items:center;margin:10px 0 4px">
-    <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase">Line Items</span>
-    <button class="btn-sm" id="btn-add-line">+ Add Item</button>
-  </div>
-  <div id="draft-wrap"></div>
-
-  ${!id ? `<label>Initial Payment Made</label><input id="form-init-pay" type="number" inputmode="decimal" placeholder="0">` : ''}
-  <button class="btn ${isSpecial?'btn-purple':''}" id="btn-save-purchase" data-id="${id||''}" data-sp="${isSpecial}">Save Entry</button>
-  `);
-
-  renderDraftRows(false);
+function pvSaleForm() {
+  let totalRev = 0, totalCost = 0;
+  saleItemDrafts.forEach(it => {
+    totalRev += (Number(it.qty)||0) * (Number(it.price)||0);
+    totalCost += (Number(it.qty)||0) * (Number(it.cost)||0);
+  });
+  const r = $('#fr') ? +$('#fr').value||0 : 0;
+  $('#pv_sale').innerHTML = `Total Sale: <b>${money(totalRev)}</b> · Profit: <b class="${totalRev-totalCost>=0?'g':'r'}">${money(totalRev-totalCost)}</b>${r ? ` · Unpaid: <b>${money(Math.max(0, totalRev-r))}</b>` : ''}`;
 }
 
-function openDetail(kind, id, isSpecial = false) {
-  const isSale = kind === 'sale';
-  const list = isSale ? (isSpecial ? DB.specialSales : DB.sales) : (isSpecial ? DB.specialPurchases : DB.purchases);
-  const entry = list.find(x => x.id === id);
-  if (!entry) return;
-  if (!Array.isArray(entry.pays)) entry.pays = [];
+function saveSale(id, isSpecial = false) {
+  const inv = $('#fi').value.trim();
+  const cust = $('#fc').value.trim();
+  const type = $('#ft').value;
+  const date = $('#fd').value || today();
+  const due = $('#fu').value || '';
 
-  const c = isSale ? calcSale(entry) : calcPurchase(entry);
-  const title = isSale ? (entry.cust || 'Direct Customer') : (entry.supplier || 'Direct Supplier');
-  const total = isSale ? c.rev : c.total;
+  const validItems = [];
+  for (let it of saleItemDrafts) {
+    const name = (it.name||'').trim();
+    const qty = Number(it.qty);
+    const cost = Number(it.cost);
+    const price = Number(it.price);
+    if (!name || !(qty > 0) || isNaN(cost) || isNaN(price)) {
+      alert('Please fill out all product names, quantities, and prices.');
+      return;
+    }
+    if (!S.products.includes(name)) {
+      S.products.push(name);
+      S.products.sort();
+    }
+    validItems.push({name, qty, cost, price});
+  }
 
-  showModal(`
-  <div class="modal-head">
+  if (cust && !S.customers.includes(cust)) {
+    S.customers.push(cust);
+    S.customers.sort();
+  }
+
+  const o = {inv, cust, type, date, due, items: validItems};
+  const targetArr = isSpecial ? S.specialSales : S.sales;
+
+  if (id) {
+    Object.assign(targetArr.find(x => x.id === id), o);
+  } else {
+    const r = +($('#fr') && $('#fr').value) || (type === 'Cash' ? validItems.reduce((a, it) => a + (it.qty * it.price), 0) : 0);
+    targetArr.push({
+      ...o,
+      id: (isSpecial ? 'ss' : 's') + Date.now(),
+      pays: r > 0 ? [{d: o.date, a: r, method: 'Cash', remark: ''}] : []
+    });
+  }
+  save();
+  closeS();
+  if (isSpecial && tab === 'special') renderSpecialList();
+  render();
+}
+
+function detailSale(id, isSpecial = false) {
+  const list = isSpecial ? (S.specialSales||[]) : (S.sales||[]);
+  const s = list.find(x => x.id === id);
+  if (!s) return;
+  if (!s.pays) s.pays = [];
+  const c = calcSale(s);
+  openS(`
+  <div class="row">
+    <h3>${esc(s.cust||'Sale Details')}</h3>
     <div>
-      <span class="pill ${isSpecial?'pill-sp':''}">${isSpecial?'★ Special ':''}${isSale?'Sale':'Purchase'}</span>
-      <h3 style="margin-top:2px">${esc(title)}</h3>
+      ${isSpecial ? '<span class="pill special">★ Special</span>' : ''}
+      <span class="pill ${s.type==='Cash'?'cash':'credit'}">${s.type||'Credit'}</span>
+      ${duePill(s.due, c.rem, s.date)}
     </div>
-    <button class="modal-close" data-act="close-modal">✕</button>
   </div>
+  <div class="l" style="margin-bottom:8px">${s.inv ? `Invoice: <b>${esc(s.inv)}</b> · ` : ''}Date: ${fd(s.date)}${s.due ? ` · Due: ${fd(s.due)}` : ''}</div>
 
-  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">
-    ${entry.inv ? `Invoice/Ref: <b>${esc(entry.inv)}</b> · ` : ''}Date: ${fmtDate(entry.date)}${entry.due ? ` · Due: ${fmtDate(entry.due)}` : ''}
-  </div>
-
-  <div class="grid-2">
-    <div class="kpi"><div class="lbl">Total</div><div class="val">${money(total)}</div></div>
-    <div class="kpi"><div class="lbl">Balance</div><div class="val" style="color:${c.rem>0.009?'var(--red)':'var(--green)'}">${c.rem>0.009?money(c.rem):'Settled'}</div></div>
-  </div>
-
-  <div class="sec-title">Itemized Breakdown</div>
-  <div class="card" style="padding:6px 10px;margin-bottom:10px">
-    ${(entry.items || []).map(it => `
-      <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;border-bottom:1px solid var(--border)">
-        <span>${esc(it.name)} ×${it.qty}</span>
+  <div class="card" style="margin-bottom:10px">
+    <b>Items Sold (${(s.items||[]).length})</b>
+    ${(s.items||[]).map(it => `
+      <div class="row" style="font-size:13px;padding:4px 0;border-bottom:1px solid var(--bd)">
+        <div>${esc(it.name)} <span class="l">(${it.qty} ×${money(it.price)})</span></div>
         <b>${money(it.qty * it.price)}</b>
       </div>
     `).join('')}
   </div>
 
-  <div class="sec-title">Logged Payments (${entry.pays.length})</div>
-  ${entry.pays.length ? entry.pays.map((p, pIdx) => `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">
+  <div class="grid">
+    <div class="card"><div class="l">Total Sale</div><div class="v">${money(c.rev)}</div></div>
+    <div class="card"><div class="l">Collected</div><div class="v g">${money(c.paid)}</div></div>
+    <div class="card" style="grid-column: span 2"><div class="l">Outstanding Receivable</div><div class="v ${c.rem>0.009?'a':'g'}">${money(Math.max(0, c.rem))}</div></div>
+  </div>
+
+  <h2>Payments Received</h2>
+  ${(s.pays||[]).length ? s.pays.map((p, i) => `
+    <div class="pay">
       <div>
-        <span>${fmtDate(p.d)}</span> <span style="font-family:monospace;font-size:11px;background:var(--border);padding:1px 4px;border-radius:4px">${esc(p.method\vert{}\vert{}'Cash')}</span>${p.remark ? `<div style="font-size:11px;color:var(--muted)">${esc(p.remark)}</div>` : ''}
+        <span>${fd(p.d)}</span>${p.method ? `<span class="subtag">${esc(p.method)}</span>` : ''}
+        ${p.remark ? `<div class="l" style="font-size:11px">Remark: ${esc(p.remark)}</div>` : ''}
       </div>
-      <div style="display:flex;align-items:center;gap:6px">
+      <div style="display:flex;align-items:center;gap:8px">
         <b>${money(p.a)}</b>
-        <button class="btn-sm" style="color:var(--red)" data-act="del-pay" data-kind="${kind}" data-id="${id}" data-pidx="${pIdx}" data-sp="${isSpecial}">✕</button>
+        <button onclick="delPaySale('${id}',${i},${isSpecial})">✕</button>
       </div>
     </div>
-  `).join('') : '<div style="font-size:12px;color:var(--muted);padding:4px 0">No payment logs yet.</div>'}
+  `).join('') : '<div class="l">No payment entries logged.</div>'}
 
   ${c.rem > 0.009 ? `
-  <div class="card" style="margin-top:10px;background:var(--border)">
-    <div style="font-weight:700;font-size:12px;margin-bottom:6px">Record Payment</div>
-    <div class="grid-2">
-      <div><label>Amount</label><input id="reg-pay-amount" type="number" inputmode="decimal" step="any" value="${Math.round(c.rem*100)/100}"></div>
-      <div><label>Mode</label>
-        <select id="reg-pay-mode">
-          <option value="Cash">Cash</option>
-          <option value="Cheque">Cheque</option>
-          <option value="Bank Transfer">Bank Transfer</option>
-        </select>
-      </div>
+  <h2 style="margin-top:14px">Record Received Payment</h2>
+  <div class="two">
+    <div><label>Amount</label><input id="spa" type="number" inputmode="decimal" step="any"></div>
+    <div><label>Payment Method</label>
+      <select id="sp_m">
+        <option value="Cash">Cash</option>
+        <option value="Cheque">Cheque</option>
+        <option value="Bank Transfer">Bank Transfer</option>
+      </select>
     </div>
-    <div class="grid-2">
-      <div><label>Date</label><input id="reg-pay-date" type="date" value="${today()}"></div>
-      <div><label>Notes / Cheque #</label><input id="reg-pay-remark" placeholder="Optional notes"></div>
-    </div>
-    <button class="btn" id="btn-submit-pay" data-kind="${kind}" data-id="${id}" data-sp="${isSpecial}">Record Payment</button>
-  </div>` : ''}
-
-  <div class="grid-2" style="margin-top:10px">
-    <button class="btn btn-sub" data-act="edit-entry" data-kind="${kind}" data-id="${id}" data-sp="${isSpecial}">Edit Record</button>
-    <button class="btn btn-del" data-act="del-entry" data-kind="${kind}" data-id="${id}" data-sp="${isSpecial}">Delete Record</button>
   </div>
+  <div class="two">
+    <div><label>Date</label><input id="spd" type="date" value="${today()}"></div>
+    <div><label>Cheque / Reference Remark</label><input id="sp_r" placeholder="Cheque #, Bank, Date"></div>
+  </div>
+  <button class="btn ${isSpecial?'sp':''}" onclick="addPaySale('${id}',${isSpecial})">Record Payment</button>
+  <button class="btn s" onclick="$('#spa').value=${Math.round(c.rem*100)/100}">Fill Remaining ${money(c.rem)}</button>
+  ` : ''}
+
+  <button class="btn s" onclick="saleForm('${id}', ${isSpecial})">Edit Sale Details</button>
+  <button class="btn x" onclick="delSale('${id}', ${isSpecial})">Delete Sale</button>
   `);
 }
 
-document.addEventListener('click', function(e) {
-  const navBtn = e.target.closest('nav button');
-  if (navBtn) {
-    currentTab = navBtn.getAttribute('data-tab');
-    searchFilter = '';
-    render();
-    $('#main').scrollTop = 0;
-    return;
+function addPaySale(id, isSpecial = false) {
+  const list = isSpecial ? S.specialSales : S.sales;
+  const s = (list||[]).find(x => x.id === id);
+  if (!s) return;
+  if (!Array.isArray(s.pays)) s.pays = [];
+
+  const aInput = $('#spa');
+  const a = aInput ? Number(aInput.value) : 0;
+  const c = calcSale(s);
+
+  if (isNaN(a) || a <= 0) { 
+    alert('Please enter a valid payment amount greater than zero.'); 
+    return; 
+  }
+  if (a > c.rem + 0.1) { 
+    alert(`Payment amount (${money(a)}) cannot exceed remaining unpaid balance (${money(c.rem)}).`); 
+    return; 
   }
 
-  if (e.target.closest('#dock-sale')) { openSaleForm(null, false); return; }
-  if (e.target.closest('#dock-buy')) { openPurchaseForm(null, false); return; }
-  if (e.target.closest('#dock-sp')) {
-    showModal(`
-      <div class="modal-head">
-        <h3>New Special Operation</h3>
-        <button class="modal-close" data-act="close-modal">✕</button>
+  const dInput = $('#spd');
+  const mInput = $('#sp_m');
+  const rInput = $('#sp_r');
+
+  s.pays.push({
+    d: (dInput && dInput.value) ? dInput.value : today(),
+    a: Math.round(a * 100) / 100,
+    method: mInput ? mInput.value : 'Cash',
+    remark: rInput ? rInput.value.trim() : ''
+  });
+  s.pays.sort((x, y) => new Date(x.d) - new Date(y.d));
+
+  save();
+  if (tab === 'sales') renderSalesList();
+  else if (tab === 'special') renderSpecialList();
+  detailSale(id, isSpecial);
+}
+
+function delPaySale(id, i, isSpecial = false) {
+  if (!confirm('Remove this payment entry?')) return;
+  const list = isSpecial ? S.specialSales : S.sales;
+  const s = (list||[]).find(x => x.id === id);
+  if (s && s.pays) {
+    s.pays.splice(i, 1);
+    save();
+    if (tab === 'sales') renderSalesList();
+    else if (tab === 'special') renderSpecialList();
+    detailSale(id, isSpecial);
+  }
+}
+
+function delSale(id, isSpecial = false) {
+  if (!confirm('Permanently delete this sale?')) return;
+  if (isSpecial) {
+    S.specialSales = S.specialSales.filter(x => x.id !== id);
+  } else {
+    S.sales = S.sales.filter(x => x.id !== id);
+  }
+  save();
+  closeS();
+  if (isSpecial && tab === 'special') renderSpecialList();
+  render();
+}
+
+let purchaseItemDrafts = [];
+function renderPurchaseItemRows() {
+  const container = $('#purchase-items-wrap');
+  if (!container) return;
+  container.innerHTML = purchaseItemDrafts.map((it, idx) => `
+    <div class="item-box">
+      <div class="row" style="margin-bottom:6px">
+        <b>Item #${idx+1}</b>
+        ${purchaseItemDrafts.length>1 ? `<button type="button" class="btn-sm x" onclick="removePurchaseItem(${idx})">Remove</button>` : ''}
       </div>
-      <p style="font-size:12px;color:var(--muted)">Select record type for the isolated special ledger:</p>
-      <button class="btn btn-purple" onclick="hideModal(); openSaleForm(null, true)">★ Add Special Sale</button>
-      <button class="btn btn-sub" onclick="hideModal(); openPurchaseForm(null, true)">★ Add Special Purchase</button>
-    `);
-    return;
+      <label>Product / Item Name</label>
+      <input list="rx-products" value="${esc(it.name)}" oninput="purchaseItemDrafts[${idx}].name=this.value;pvPurchaseForm()" placeholder="Select or type item">
+      <div class="two">
+        <div><label>Quantity</label><input type="number" inputmode="decimal" value="${it.qty}" oninput="purchaseItemDrafts[${idx}].qty=this.value;pvPurchaseForm()"></div>
+        <div><label>Unit Purchase Price</label><input type="number" inputmode="decimal" value="${it.price}" oninput="purchaseItemDrafts[${idx}].price=this.value;pvPurchaseForm()"></div>
+      </div>
+    </div>
+  `).join('');
+  pvPurchaseForm();
+}
+
+function addPurchaseItemRow() {
+  purchaseItemDrafts.push({name: '', qty: 1, price: ''});
+  renderPurchaseItemRows();
+}
+
+function removePurchaseItem(idx) {
+  if (purchaseItemDrafts.length <= 1) return;
+  purchaseItemDrafts.splice(idx, 1);
+  renderPurchaseItemRows();
+}
+
+function purchaseForm(id, isSpecial = false) {
+  const list = isSpecial ? (S.specialPurchases||[]) : (S.purchases||[]);
+  const p = list.find(x => x.id === id);
+  if (p && p.items && p.items.length) {
+    purchaseItemDrafts = JSON.parse(JSON.stringify(p.items));
+  } else if (p) {
+    purchaseItemDrafts = [{name: p.name||'', qty: p.qty||1, price: p.price||''}];
+  } else {
+    purchaseItemDrafts = [{name: '', qty: 1, price: ''}];
   }
+  const type = p ? (p.type||'Credit') : 'Credit';
+  const inv = p ? (p.inv||'') : '';
+  const supplier = p ? (p.supplier||'') : '';
+  const date = p ? (p.date||today()) : today();
+  const due = p ? (p.due||'') : '';
 
-  if (e.target.closest('#btn-theme')) {
-    const cur = document.documentElement.getAttribute('data-theme');
-    const target = cur === 'dark' ? 'light' : 'dark';
-    DB.theme = target;
-    applyTheme();
-    saveDB();
-    return;
-  }
+  openS(`<h3>${id ? (isSpecial ? 'Edit Special Purchase' : 'Edit Purchase') : (isSpecial ? '★ New Special Purchase' : 'New Purchase')}</h3>
+  <div class="two">
+    <div><label>Supplier Invoice / Bill #</label><input id="pi_inv" value="${esc(inv)}" placeholder="e.g. BILL-902"></div>
+    <div><label>Purchase Type</label>
+      <select id="pi_t">
+        <option value="Credit" ${type==='Credit'?'selected':''}>Credit Purchase</option>
+        <option value="Cash" ${type==='Cash'?'selected':''}>Cash Purchase</option>
+      </select>
+    </div>
+  </div>
+  <div class="two">
+    <div><label>Supplier Name</label><input id="pi_s" list="rx-suppliers" value="${esc(supplier)}" placeholder="Select or type supplier"></div>
+    <div><label>Purchase Date</label><input id="pi_d" type="date" value="${date}"></div>
+  </div>
+  <div id="pi-due-wrap"><label>Payment Due Date (Optional)</label><input id="pi_u" type="date" value="${due}"></div>
 
-  if (e.target.closest('[data-act="close-modal"]')) { hideModal(); return; }
-  if (e.target.id === 'modal') { hideModal(); return; }
+  <div style="margin:10px 0 6px" class="row">
+    <b>Products / Items</b>
+    <button type="button" class="btn-sm s" onclick="addPurchaseItemRow()">+ Add Another Item</button>
+  </div>
+  <div id="purchase-items-wrap"></div>
 
-  if (e.target.id === 'sp-tab-sales') { spSubTab = 'sales'; render(); return; }
-  if (e.target.id === 'sp-tab-purchases') { spSubTab = 'purchases'; render(); return; }
+  ${id ? '' : '<label>Paid Immediately</label><input id="pi_r" type="number" inputmode="decimal" placeholder="0" oninput="pvPurchaseForm()">' }
+  <div class="prev" id="pv_purchase"></div>
+  <button class="btn ${isSpecial?'sp':''}" onclick="savePurchase('${id||''}', ${isSpecial})">Save ${isSpecial ? 'Special Purchase' : 'Purchase'}</button>
+  <button class="btn s" onclick="closeS()">Cancel</button>`);
 
-  const entryCard = e.target.closest('[data-act="open-detail"]');
-  if (entryCard) {
-    const kind = entryCard.getAttribute('data-kind');
-    const id = entryCard.getAttribute('data-id');
-    const isSp = entryCard.getAttribute('data-sp') === 'true';
-    openDetail(kind, id, isSp);
-    return;
-  }
-
-  if (e.target.closest('#btn-add-line')) {
-    const isSale = $('#btn-save-sale') !== null;
-    draftItems.push(isSale ? { name: '', qty: 1, cost: '', price: '' } : { name: '', qty: 1, price: '' });
-    renderDraftRows(isSale);
-    return;
-  }
-
-  const delRow = e.target.closest('[data-act="del-draft-row"]');
-  if (delRow) {
-    const idx = Number(delRow.getAttribute('data-idx'));
-    if (draftItems.length > 1) {
-      draftItems.splice(idx, 1);
-      const isSale = $('#btn-save-sale') !== null;
-      renderDraftRows(isSale);
+  renderPurchaseItemRows();
+  $('#pi_t').onchange = () => {
+    const isCash = $('#pi_t').value === 'Cash';
+    if (isCash && $('#pi_r')) {
+      let totalAmount = 0;
+      purchaseItemDrafts.forEach(it => { totalAmount += (Number(it.qty)||0) * (Number(it.price)||0); });
+      $('#pi_r').value = totalAmount || '';
     }
-    return;
+    pvPurchaseForm();
+  };
+}
+
+function pvPurchaseForm() {
+  let totalAmount = 0;
+  purchaseItemDrafts.forEach(it => {
+    totalAmount += (Number(it.qty)||0) * (Number(it.price)||0);
+  });
+  const r = $('#pi_r') ? +$('#pi_r').value||0 : 0;
+  $('#pv_purchase').innerHTML = `Total Purchase: <b>${money(totalAmount)}</b>${r ? ` · Remaining Payable: <b class="r">${money(Math.max(0, totalAmount-r))}</b>` : ''}`;
+}
+
+function savePurchase(id, isSpecial = false) {
+  const inv = $('#pi_inv').value.trim();
+  const supplier = $('#pi_s').value.trim();
+  const type = $('#pi_t').value;
+  const date = $('#pi_d').value || today();
+  const due = $('#pi_u') ? $('#pi_u').value : '';
+
+  const validItems = [];
+  for (let it of purchaseItemDrafts) {
+    const name = (it.name||'').trim();
+    const qty = Number(it.qty);
+    const price = Number(it.price);
+    if (!name || !(qty > 0) || isNaN(price)) {
+      alert('Please fill in all item names, quantities, and unit prices.');
+      return;
+    }
+    if (!S.products.includes(name)) {
+      S.products.push(name);
+      S.products.sort();
+    }
+    validItems.push({name, qty, price});
   }
 
-  const saveSaleBtn = e.target.closest('#btn-save-sale');
-  if (saveSaleBtn) {
-    const id = saveSaleBtn.getAttribute('data-id');
-    const isSp = saveSaleBtn.getAttribute('data-sp') === 'true';
-    const inv = $('#form-inv').value.trim();
-    const cust = $('#form-party').value.trim();
-    const type = $('#form-type').value;
-    const date = $('#form-date').value || today();
-    const due = $('#form-due').value || '';
-
-    const clean = [];
-    for (let it of draftItems) {
-      const name = (it.name || '').trim();
-      const qty = num(it.qty);
-      const cost = num(it.cost);
-      const price = num(it.price);
-      if (!name || qty <= 0) {
-        alert('Please fill in valid product names and quantities.');
-        return;
-      }
-      clean.push({ name, qty, cost, price });
-    }
-
-    const payload = { inv, cust, type, date, due, items: clean };
-    const target = isSp ? DB.specialSales : DB.sales;
-
-    if (id) {
-      const it = target.find(x => x.id === id);
-      if (it) Object.assign(it, payload);
-    } else {
-      const initPay = num($('#form-init-pay') ? $('#form-init-pay').value : 0);
-      const revTotal = clean.reduce((acc, x) => acc + (x.qty * x.price), 0);
-      const amt = type === 'Cash' ? (initPay || revTotal) : initPay;
-      target.push({
-        ...payload,
-        id: (isSp ? 'ss_' : 's_') + Date.now(),
-        pays: amt > 0 ? [{ d: date, a: amt, method: 'Cash', remark: '' }] : []
-      });
-    }
-
-    saveDB();
-    hideModal();
-    render();
-    return;
+  if (supplier && !S.suppliers.includes(supplier)) {
+    S.suppliers.push(supplier);
+    S.suppliers.sort();
   }
 
-  const saveBuyBtn = e.target.closest('#btn-save-purchase');
-  if (saveBuyBtn) {
-    const id = saveBuyBtn.getAttribute('data-id');
-    const isSp = saveBuyBtn.getAttribute('data-sp') === 'true';
-    const inv = $('#form-inv').value.trim();
-    const supplier = $('#form-party').value.trim();
-    const type = $('#form-type').value;
-    const date = $('#form-date').value || today();
-    const due = $('#form-due').value || '';
+  const o = {inv, supplier, type, date, due, items: validItems};
+  const targetArr = isSpecial ? S.specialPurchases : S.purchases;
 
-    const clean = [];
-    for (let it of draftItems) {
-      const name = (it.name || '').trim();
-      const qty = num(it.qty);
-      const price = num(it.price);
-      if (!name || qty <= 0) {
-        alert('Please fill in valid item names and quantities.');
-        return;
-      }
-      clean.push({ name, qty, price });
-    }
-
-    const payload = { inv, supplier, type, date, due, items: clean };
-    const target = isSp ? DB.specialPurchases : DB.purchases;
-
-    if (id) {
-      const it = target.find(x => x.id === id);
-      if (it) Object.assign(it, payload);
-    } else {
-      const initPay = num($('#form-init-pay') ? $('#form-init-pay').value : 0);
-      const costTotal = clean.reduce((acc, x) => acc + (x.qty * x.price), 0);
-      const amt = type === 'Cash' ? (initPay || costTotal) : initPay;
-      target.push({
-        ...payload,
-        id: (isSp ? 'sp_' : 'p_') + Date.now(),
-        pays: amt > 0 ? [{ d: date, a: amt, method: 'Cash', remark: '' }] : []
-      });
-    }
-
-    saveDB();
-    hideModal();
-    render();
-    return;
-  }
-
-  const editBtn = e.target.closest('[data-act="edit-entry"]');
-  if (editBtn) {
-    const kind = editBtn.getAttribute('data-kind');
-    const id = editBtn.getAttribute('data-id');
-    const isSp = editBtn.getAttribute('data-sp') === 'true';
-    hideModal();
-    if (kind === 'sale') openSaleForm(id, isSp);
-    else openPurchaseForm(id, isSp);
-    return;
-  }
-
-  const delBtn = e.target.closest('[data-act="del-entry"]');
-  if (delBtn) {
-    if (!confirm('Permanently delete this entry?')) return;
-    const kind = delBtn.getAttribute('data-kind');
-    const id = delBtn.getAttribute('data-id');
-    const isSp = delBtn.getAttribute('data-sp') === 'true';
-    if (kind === 'sale') {
-      if (isSp) DB.specialSales = DB.specialSales.filter(x => x.id !== id);
-      else DB.sales = DB.sales.filter(x => x.id !== id);
-    } else {
-      if (isSp) DB.specialPurchases = DB.specialPurchases.filter(x => x.id !== id);
-      else DB.purchases = DB.purchases.filter(x => x.id !== id);
-    }
-    saveDB();
-    hideModal();
-    render();
-    return;
-  }
-
-  const payBtn = e.target.closest('#btn-submit-pay');
-  if (payBtn) {
-    const kind = payBtn.getAttribute('data-kind');
-    const id = payBtn.getAttribute('data-id');
-    const isSp = payBtn.getAttribute('data-sp') === 'true';
-    const list = kind === 'sale' ? (isSp ? DB.specialSales : DB.sales) : (isSp ? DB.specialPurchases : DB.purchases);
-    const item = list.find(x => x.id === id);
-    if (!item) return;
-
-    const amt = num($('#reg-pay-amount').value);
-    const c = kind === 'sale' ? calcSale(item) : calcPurchase(item);
-
-    if (amt <= 0) { alert('Enter an amount greater than zero.'); return; }
-    if (amt > c.rem + 0.1) { alert(`Amount cannot exceed balance of ${money(c.rem)}.`); return; }
-
-    if (!Array.isArray(item.pays)) item.pays = [];
-    item.pays.push({
-      d: $('#reg-pay-date').value || today(),
-      a: Math.round(amt * 100) / 100,
-      method: $('#reg-pay-mode').value || 'Cash',
-      remark: ($('#reg-pay-remark').value || '').trim()
+  if (id) {
+    Object.assign(targetArr.find(x => x.id === id), o);
+  } else {
+    const r = +($('#pi_r') && $('#pi_r').value) || (type === 'Cash' ? validItems.reduce((a, it) => a + (it.qty * it.price), 0) : 0);
+    targetArr.push({
+      ...o,
+      id: (isSpecial ? 'sp' : 'p') + Date.now(),
+      pays: r > 0 ? [{d: o.date, a: r, method: 'Cash', remark: ''}] : []
     });
+  }
+  save();
+  closeS();
+  if (isSpecial && tab === 'special') renderSpecialList();
+  render();
+}
 
-    saveDB();
-    openDetail(kind, id, isSp);
-    render();
-    return;
+function detailPurchase(id, isSpecial = false) {
+  const list = isSpecial ? (S.specialPurchases||[]) : (S.purchases||[]);
+  const p = list.find(x => x.id === id);
+  if (!p) return;
+  if (!p.pays) p.pays = [];
+  const c = calcPurchase(p);
+  openS(`
+  <div class="row">
+    <h3>${esc(p.supplier||'Supplier Bill')}</h3>
+    <div>
+      ${isSpecial ? '<span class="pill special">★ Special</span>' : ''}
+      <span class="pill ${p.type==='Cash'?'cash':'credit'}">${p.type||'Credit'}</span>
+      ${duePill(p.due, c.rem, p.date, 'Settled')}
+    </div>
+  </div>
+  <div class="l" style="margin-bottom:8px">${p.inv ? `Bill/Invoice: <b>${esc(p.inv)}</b> · ` : ''}Date: ${fd(p.date)}${p.due ? ` · Due: ${fd(p.due)}` : ''}</div>
+
+  <div class="card" style="margin-bottom:10px">
+    <b>Items Purchased (${(p.items||[]).length})</b>
+    ${(p.items||[]).map(it => `
+      <div class="row" style="font-size:13px;padding:4px 0;border-bottom:1px solid var(--bd)">
+        <div>${esc(it.name)} <span class="l">(${it.qty} ×${money(it.price)})</span></div>
+        <b>${money(it.qty * it.price)}</b>
+      </div>
+    `).join('')}
+  </div>
+
+  <div class="grid">
+    <div class="card"><div class="l">Total Purchase</div><div class="v">${money(c.total)}</div></div>
+    <div class="card"><div class="l">Paid So Far</div><div class="v g">${money(c.paid)}</div></div>
+    <div class="card" style="grid-column: span 2"><div class="l">Remaining Payable (Owed)</div><div class="v ${c.rem>0.009?'r':'g'}">${money(Math.max(0, c.rem))}</div></div>
+  </div>
+
+  <h2>Supplier Payments Made</h2>
+  ${(p.pays||[]).length ? p.pays.map((x, i) => `
+    <div class="pay">
+      <div>
+        <span>${fd(x.d)}</span>${x.method ? `<span class="subtag">${esc(x.method)}</span>` : ''}
+        ${x.remark ? `<div class="l" style="font-size:11px">Cheque/Remark: ${esc(x.remark)}</div>` : ''}
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <b>${money(x.a)}</b>
+        <button onclick="delPayPurchase('${id}',${i},${isSpecial})">✕</button>
+      </div>
+    </div>
+  `).join('') : '<div class="l">No payment records logged.</div>'}
+
+  ${c.rem > 0.009 ? `
+  <h2 style="margin-top:14px">Record Payment to Supplier</h2>
+  <div class="two">
+    <div><label>Payment Mode</label>
+      <select id="ppm">
+        <option value="Cheque">Cheque</option>
+        <option value="Cash">Cash</option>
+        <option value="Bank Transfer">Bank Transfer</option>
+      </select>
+    </div>
+    <div><label>Amount</label><input id="ppa" type="number" inputmode="decimal" step="any"></div>
+  </div>
+  <div class="two">
+    <div><label>Payment Date</label><input id="ppd" type="date" value="${today()}"></div>
+    <div><label>Cheque Details / Remarks</label><input id="ppr" placeholder="Cheque #, Bank, Clear Date"></div>
+  </div>
+  <button class="btn ${isSpecial?'sp':''}" onclick="addPayPurchase('${id}',${isSpecial})">Record Payment</button>
+  <button class="btn s" onclick="$('#ppa').value=${Math.round(c.rem*100)/100}">Fill Remaining ${money(c.rem)}</button>
+  ` : ''}
+
+  <button class="btn s" onclick="purchaseForm('${id}', ${isSpecial})">Edit Purchase</button>
+  <button class="btn x" onclick="delPurchase('${id}', ${isSpecial})">Delete Purchase</button>
+  `);
+}
+
+function addPayPurchase(id, isSpecial = false) {
+  const list = isSpecial ? S.specialPurchases : S.purchases;
+  const p = (list||[]).find(x => x.id === id);
+  if (!p) return;
+  if (!Array.isArray(p.pays)) p.pays = [];
+
+  const aInput = $('#ppa');
+  const a = aInput ? Number(aInput.value) : 0;
+  const c = calcPurchase(p);
+
+  if (isNaN(a) || a <= 0) { 
+    alert('Please enter a valid payment amount greater than zero.'); 
+    return; 
+  }
+  if (a > c.rem + 0.1) { 
+    alert(`Payment amount (${money(a)}) cannot exceed remaining payable amount (${money(c.rem)}).`); 
+    return; 
   }
 
-  const delSinglePay = e.target.closest('[data-act="del-pay"]');
-  if (delSinglePay) {
-    if (!confirm('Delete this payment log?')) return;
-    const kind = delSinglePay.getAttribute('data-kind');
-    const id = delSinglePay.getAttribute('data-id');
-    const pIdx = Number(delSinglePay.getAttribute('data-pidx'));
-    const isSp = delSinglePay.getAttribute('data-sp') === 'true';
-    const list = kind === 'sale' ? (isSp ? DB.specialSales : DB.sales) : (isSp ? DB.specialPurchases : DB.purchases);
-    const item = list.find(x => x.id === id);
-    if (item && item.pays) {
-      item.pays.splice(pIdx, 1);
-      saveDB();
-      openDetail(kind, id, isSp);
-      render();
-    }
-    return;
-  }
+  const dInput = $('#ppd');
+  const mInput = $('#ppm');
+  const rInput = $('#ppr');
 
-  if (e.target.closest('#btn-export-quick') || e.target.closest('#btn-export-full')) {
-    exportExcel();
-    return;
-  }
+  p.pays.push({
+    d: (dInput && dInput.value) ? dInput.value : today(),
+    a: Math.round(a * 100) / 100,
+    method: mInput ? mInput.value : 'Cheque',
+    remark: rInput ? rInput.value.trim() : ''
+  });
+  p.pays.sort((x, y) => new Date(x.d) - new Date(y.d));
 
-  if (e.target.closest('#btn-save-firebase')) {
-    const url = $('#cfg-firebase').value.trim();
-    DB.firebaseUrl = url;
-    saveDB();
-    alert(url ? 'Firebase URL connected.' : 'Sync disconnected.');
-    initFirebase();
-    return;
-  }
+  save();
+  if (tab === 'purchases') renderPurchasesList();
+  else if (tab === 'special') renderSpecialList();
+  detailPurchase(id, isSpecial);
+}
 
-  if (e.target.closest('#btn-copy-json')) {
-    navigator.clipboard.writeText(JSON.stringify(DB));
-    alert('JSON backup copied to clipboard.');
-    return;
-  }
-  if (e.target.closest('#btn-paste-json')) {
-    const s = prompt('Paste your raw JSON string:');
-    if (!s) return;
-    try {
-      const p = JSON.parse(s);
-      if (Array.isArray(p.sales)) {
-        DB = Object.assign(DB, p);
-        saveDB();
-        render();
-        alert('Data restored successfully.');
-      } else alert('Invalid JSON structure.');
-    } catch(err) { alert('Failed to parse JSON.'); }
-    return;
-  }
-});
-
-document.addEventListener('input', function(e) {
-  if (e.target.id === 'inp-search') {
-    searchFilter = e.target.value;
-    render();
-    const el = $('#inp-search');
-    if (el) {
-      el.focus();
-      el.setSelectionRange(el.value.length, el.value.length);
-    }
-    return;
-  }
-
-  const act = e.target.getAttribute('data-act');
-  if (!act) return;
-  const idx = Number(e.target.getAttribute('data-idx'));
-  if (isNaN(idx) || !draftItems[idx]) return;
-
-  if (act === 'inp-draft-name') draftItems[idx].name = e.target.value;
-  else if (act === 'inp-draft-qty') draftItems[idx].qty = e.target.value;
-  else if (act === 'inp-draft-cost') draftItems[idx].cost = e.target.value;
-  else if (act === 'inp-draft-price') draftItems[idx].price = e.target.value;
-});
-
-document.addEventListener('change', function(e) {
-  if (e.target.id === 'cfg-theme') {
-    DB.theme = e.target.value;
-    applyTheme();
-    saveDB();
-  } else if (e.target.id === 'cfg-cur') {
-    DB.cur = e.target.value.trim() || 'Rs';
-    saveDB();
-    render();
-  }
-});
-
-function applyTheme() {
-  const root = document.documentElement;
-  if (DB.theme === 'dark') root.setAttribute('data-theme', 'dark');
-  else if (DB.theme === 'light') root.setAttribute('data-theme', 'light');
-  else {
-    const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+function delPayPurchase(id, i, isSpecial = false) {
+  if (!confirm('Delete this payment record?')) return;
+  const list = isSpecial ? S.specialPurchases : S.purchases;
+  const p = (list||[]).find(x => x.id === id);
+  if (p && p.pays) {
+    p.pays.splice(i, 1);
+    save();
+    if (tab === 'purchases') renderPurchasesList();
+    else if (tab === 'special') renderSpecialList();
+    detailPurchase(id, isSpecial);
   }
 }
 
-function initFirebase() {
-  if (!DB.firebaseUrl || typeof firebase === 'undefined') return;
-  try {
-    const clean = DB.firebaseUrl.trim().replace(/\/+$/, '');
-    if (!firebase.apps.length) firebase.initializeApp({ databaseURL: clean });
-    fbRef = firebase.database().ref('pt_fresh_db_v3');
-    fbRef.on('value', snap => {
-      const val = snap.val();
-      if (val) {
-        if (Array.isArray(val.sales)) DB.sales = val.sales;
-        if (Array.isArray(val.purchases)) DB.purchases = val.purchases;
-        if (Array.isArray(val.specialSales)) DB.specialSales = val.specialSales;
-        if (Array.isArray(val.specialPurchases)) DB.specialPurchases = val.specialPurchases;
-        if (val.cur) DB.cur = val.cur;
-        try { localStorage.setItem('pt_fresh_db_v3', JSON.stringify(DB)); } catch(e){}
-        render();
-      }
-    });
-  } catch(e) {}
+function delPurchase(id, isSpecial = false) {
+  if (!confirm('Permanently delete this purchase?')) return;
+  if (isSpecial) {
+    S.specialPurchases = S.specialPurchases.filter(x => x.id !== id);
+  } else {
+    S.purchases = S.purchases.filter(x => x.id !== id);
+  }
+  save();
+  closeS();
+  if (isSpecial && tab === 'special') renderSpecialList();
+  render();
 }
 
-function exportExcel() {
-  if (typeof XLSX === 'undefined') { alert('Excel export engine not loaded.'); return; }
+async function exportXlsx() {
+  if (typeof XLSX === 'undefined') { alert('XLSX library could not load.'); return; }
   const wb = XLSX.utils.book_new();
-  const regM = getMetrics(false);
-  const spM = getMetrics(true);
+  const t = tot(false);
+  const st = tot(true);
 
-  const overview = [
-    ['Ledger Overview Statement', ''],
-    ['Generated On', today()],
+  const sm = [
+    ['Profit & Payables Tracker by Kisara Rajapaksha', ''],
+    ['Exported On', today()],
     ['', ''],
-    ['=== GENERAL OPERATIONS ===', ''],
-    ['Total Sales', regM.rev],
-    ['Total Receivables', regM.rec],
-    ['Total Purchases', regM.buyTotal],
-    ['Total Payables', regM.pay],
-    ['Estimated Net Profit', regM.profit],
+    ['=== REGULAR BUSINESS ===', ''],
+    ['TOTAL RECEIVABLES (To Receive)', t.receivable],
+    ['TOTAL PAYABLES (To Settle)', t.payable],
+    ['CRITICAL OVERDUE RECEIVABLES (2M+)', t.over2mRec],
+    ['CRITICAL OVERDUE PAYABLES (2M+)', t.over2mPay],
+    ['TOTAL SALES REVENUE', t.rev],
+    ['TOTAL PURCHASES', t.purchasesTotal],
+    ['TOTAL NET PROFIT', t.profit],
     ['', ''],
-    ['=== SPECIAL OPERATIONS ===', ''],
-    ['Special Sales', spM.rev],
-    ['Special Receivables', spM.rec],
-    ['Special Purchases', spM.buyTotal],
-    ['Special Payables', spM.pay],
-    ['Special Margin', spM.profit]
+    ['=== SPECIAL SECTION (INDEPENDENT) ===', ''],
+    ['SPECIAL RECEIVABLES', st.receivable],
+    ['SPECIAL PAYABLES', st.payable],
+    ['SPECIAL TOTAL SALES', st.rev],
+    ['SPECIAL TOTAL PURCHASES', st.purchasesTotal],
+    ['SPECIAL NET PROFIT', st.profit]
   ];
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(overview), 'Summary');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(sm), 'Summary');
 
-  function makeSheet(list, isSale) {
-    const rows = [['Date', 'Ref / Inv', 'Type', 'Party', 'Items', 'Total', 'Paid', 'Balance', 'Due Date', 'Status']];
-    (list || []).forEach(x => {
-      const c = isSale ? calcSale(x) : calcPurchase(x);
-      const str = (x.items || []).map(i => `${i.name} (x${i.qty})`).join(', ');
-      rows.push([x.date, x.inv||'', x.type||'Credit', (isSale?x.cust:x.supplier)||'', str, isSale?c.rev:c.total, c.paid, c.rem, x.due||'-', c.rem<=0.009?'Settled':'Pending']);
+  function appendSalesSheet(sheetName, list) {
+    const rows = [['Date', 'Invoice #', 'Type', 'Customer', 'Items Breakdown', 'Total Sale', 'Received', 'Receivable', 'Due Date', 'Status', 'Overdue 60d+']];
+    (list||[]).forEach(s => {
+      const c = calcSale(s);
+      const itemStr = (s.items||[]).map(i => `${i.name} (x${i.qty})`).join(', ');
+      const isCrit = isTwoMonthsOverdue(s.date, s.due, c.rem);
+      rows.push([s.date, s.inv||'', s.type||'Credit', s.cust||'', itemStr, c.rev, c.paid, Math.max(0, c.rem), s.due||'-', c.rem <= 0.009 ? 'Paid' : 'Unpaid', isCrit ? 'YES' : 'NO']);
     });
-    return XLSX.utils.aoa_to_sheet(rows);
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), sheetName);
   }
 
-  XLSX.utils.book_append_sheet(wb, makeSheet(DB.sales, true), 'Sales');
-  XLSX.utils.book_append_sheet(wb, makeSheet(DB.purchases, false), 'Purchases');
-  XLSX.utils.book_append_sheet(wb, makeSheet(DB.specialSales, true), 'Special Sales');
-  XLSX.utils.book_append_sheet(wb, makeSheet(DB.specialPurchases, false), 'Special Purchases');
+  function appendPurchasesSheet(sheetName, list) {
+    const rows = [['Date', 'Bill / Inv #', 'Type', 'Supplier', 'Items Breakdown', 'Total Purchase', 'Paid', 'Payable', 'Due Date', 'Status', 'Overdue 60d+']];
+    (list||[]).forEach(p => {
+      const c = calcPurchase(p);
+      const itemStr = (p.items||[]).map(i => `${i.name} (x${i.qty})`).join(', ');
+      const isCrit = isTwoMonthsOverdue(p.date, p.due, c.rem);
+      rows.push([p.date, p.inv||'', p.type||'Credit', p.supplier||'', itemStr, c.total, c.paid, Math.max(0, c.rem), p.due||'-', c.rem <= 0.009 ? 'Paid' : 'Unpaid', isCrit ? 'YES' : 'NO']);
+    });
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), sheetName);
+  }
 
-  XLSX.writeFile(wb, `Business_Ledger_${today()}.xlsx`);
+  appendSalesSheet('Regular Sales', S.sales);
+  appendPurchasesSheet('Regular Purchases', S.purchases);
+  appendSalesSheet('Special Sales', S.specialSales);
+  appendPurchasesSheet('Special Purchases', S.specialPurchases);
+
+  const payRows = [['Scope', 'Entry Type', 'Date', 'Invoice / Bill #', 'Party', 'Amount', 'Payment Mode', 'Cheque / Remark']];
+  (S.sales||[]).forEach(s => (s.pays||[]).forEach(p => payRows.push(['Regular', 'Sale Collection', p.d, s.inv||'', s.cust||'', p.a, p.method||'Cash', p.remark||''])));
+  (S.purchases||[]).forEach(pr => (pr.pays||[]).forEach(p => payRows.push(['Regular', 'Supplier Payment', p.d, pr.inv||'', pr.supplier||'', p.a, p.method||'Cash', p.remark||''])));
+  (S.specialSales||[]).forEach(s => (s.pays||[]).forEach(p => payRows.push(['Special', 'Special Sale Collection', p.d, s.inv||'', s.cust||'', p.a, p.method||'Cash', p.remark||''])));
+  (S.specialPurchases||[]).forEach(pr => (pr.pays||[]).forEach(p => payRows.push(['Special', 'Special Supplier Payment', p.d, pr.inv||'', pr.supplier||'', p.a, p.method||'Cash', p.remark||''])));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(payRows), 'Payment Log');
+
+  const buf = XLSX.write(wb, {type: 'array', bookType: 'xlsx'});
+  const blob = new Blob([buf], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Profit-Tracker-${today()}.xlsx`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }
 
-applyTheme();
-initFirebase();
+document.querySelectorAll('nav button').forEach(b => b.onclick = () => { 
+  tab = b.dataset.t; 
+  render(); 
+  if (tab === 'special') renderSpecialList();
+  $('#main').scrollTop = 0; 
+});
+$('#cs').onclick = () => { tab = 'more'; render(); };
+
+applyTheme(S.theme);
+updateDatalists();
+initFirebaseSync();
 render();
 </script>
 </body>
