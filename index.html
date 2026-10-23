@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f766e">
-  <link rel="manifest" href="manifest.json">
+<link rel="manifest" href="manifest.json">
 <script>
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js');
@@ -94,6 +94,7 @@ label{display:block;font-size:11px;color:var(--mu);margin:8px 0 3px;font-weight:
 .seg-control{display:flex;background:var(--bg);padding:4px;border-radius:10px;gap:4px;margin-bottom:12px;border:1px solid var(--bd)}
 .seg-btn{flex:1;border:0;background:none;padding:7px;border-radius:7px;font-weight:600;font-size:13px;color:var(--mu);cursor:pointer}
 .seg-btn.on{background:var(--card);color:var(--purple);box-shadow:var(--sh)}
+.seg-btn.on-ac{background:var(--card);color:var(--ac);box-shadow:var(--sh)}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -150,6 +151,7 @@ let S = {
 };
 
 let tab = 'home', q = '', qp = '', qsp = '', specialSubTab = 'sales';
+let monthlyScope = 'regular'; // 'regular', 'special', 'all'
 let dbRef = null;
 let isWriting = false;
 
@@ -275,7 +277,7 @@ function updateDatalists() {
 }
 
 const today = () => new Date().toISOString().slice(0, 10);
-const money = n => S.cur + ' ' + (Math.round((Number(n)||0) * 100) / 100).toLocaleString(undefined, {maximumFractionDigits: 2});
+const money = n => S.cur + ' ' + (Math.round((Number(n)||0) * 100) / 100).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 const esc = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fd = d => new Date(d).toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'});
 const daysTo = d => Math.round((new Date(d) - new Date(today())) / 864e5);
@@ -298,7 +300,7 @@ const calcSale = s => {
   const paid = (s.pays||[]).reduce((a, p) => a + (Number(p.a)||0), 0);
   const rem = Math.round((rev - paid) * 100) / 100;
   const pct = rev ? Math.min(100, (paid / rev) * 100) : 100;
-  return {cost, rev, paid, profit: rev - cost, rem, pct};
+  return {cost, rev, paid, profit: Math.round((rev - cost) * 100) / 100, rem, pct};
 };
 
 const calcPurchase = p => {
@@ -671,8 +673,178 @@ function specialActionPrompt() {
   `);
 }
 
+// ==================== PROFIT BY MONTH FEATURE ====================
+function getMonthlyData(scope = 'regular') {
+  let salesList = [];
+  if (scope === 'regular') {
+    salesList = S.sales || [];
+  } else if (scope === 'special') {
+    salesList = S.specialSales || [];
+  } else {
+    salesList = [...(S.sales || []), ...(S.specialSales || [])];
+  }
+
+  const monthsMap = {};
+
+  salesList.forEach(s => {
+    const dateStr = s.date || today();
+    const ym = dateStr.slice(0, 7); // "YYYY-MM"
+    if (!monthsMap[ym]) {
+      monthsMap[ym] = {
+        ym,
+        revenue: 0,
+        cost: 0,
+        profit: 0,
+        paid: 0,
+        receivable: 0,
+        salesCount: 0,
+        itemsSummary: {}
+      };
+    }
+
+    const c = calcSale(s);
+    monthsMap[ym].revenue += c.rev;
+    monthsMap[ym].cost += c.cost;
+    monthsMap[ym].profit += c.profit;
+    monthsMap[ym].paid += c.paid;
+    monthsMap[ym].receivable += Math.max(0, c.rem);
+    monthsMap[ym].salesCount += 1;
+
+    (s.items || []).forEach(it => {
+      const name = it.name || 'Unknown Item';
+      if (!monthsMap[ym].itemsSummary[name]) {
+        monthsMap[ym].itemsSummary[name] = { qty: 0, rev: 0 };
+      }
+      monthsMap[ym].itemsSummary[name].qty += (Number(it.qty) || 0);
+      monthsMap[ym].itemsSummary[name].rev += ((Number(it.qty) || 0) * (Number(it.price) || 0));
+    });
+  });
+
+  const sortedKeys = Object.keys(monthsMap).sort((a, b) => b.localeCompare(a));
+  return sortedKeys.map(k => monthsMap[k]);
+}
+
+function formatYearMonth(ym) {
+  if (!ym) return 'Unknown';
+  const [year, month] = ym.split('-');
+  const dateObj = new Date(Number(year), Number(month) - 1, 1);
+  return dateObj.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+}
+
+function openProfitByMonth(scope = 'regular') {
+  monthlyScope = scope;
+  const list = getMonthlyData(monthlyScope);
+
+  let totalRevAll = 0, totalCostAll = 0, totalProfitAll = 0;
+  list.forEach(m => {
+    totalRevAll += m.revenue;
+    totalCostAll += m.cost;
+    totalProfitAll += m.profit;
+  });
+
+  const marginAll = totalRevAll > 0 ? Math.round((totalProfitAll / totalRevAll) * 1000) / 10 : 0;
+
+  openS(`
+    <div class="row" style="margin-bottom:8px">
+      <h3>📅 Profit by Month</h3>
+      <button class="ib" onclick="closeS()">✕ Close</button>
+    </div>
+    
+    <div class="seg-control" style="margin-bottom:12px">
+      <button class="seg-btn ${monthlyScope==='regular'?'on-ac':''}" onclick="openProfitByMonth('regular')">Regular</button>
+      <button class="seg-btn ${monthlyScope==='special'?'on':''}" onclick="openProfitByMonth('special')">★ Special</button>
+      <button class="seg-btn ${monthlyScope==='all'?'on-ac':''}" onclick="openProfitByMonth('all')">Combined</button>
+    </div>
+
+    <div class="card" style="border-left: 4px solid var(--ac); margin-bottom:12px; background:rgba(15,118,110,0.04)">
+      <div class="row">
+        <div>
+          <div class="l">TOTAL CUMULATIVE PROFIT</div>
+          <div class="v ${totalProfitAll>=0?'g':'r'}" style="font-size:22px">${money(totalProfitAll)}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="l">Overall Margin</div>
+          <div class="v" style="font-size:18px">${marginAll}%</div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:8px; font-size:12px; color:var(--mu)">
+        <span>Total Sales: <b>${money(totalRevAll)}</b></span>
+        <span>Total Cost: <b>${money(totalCostAll)}</b></span>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:8px;">
+      ${list.length ? list.map((m, idx) => {
+        const margin = m.revenue > 0 ? Math.round((m.profit / m.revenue) * 1000) / 10 : 0;
+        const topItems = Object.entries(m.itemsSummary)
+          .sort((a, b) => b[1].rev - a[1].rev)
+          .slice(0, 3);
+
+        return `
+        <div class="card" style="margin:0; cursor:pointer;" onclick="toggleMonthDetails('md_${idx}')">
+          <div class="row">
+            <div>
+              <b style="font-size:16px">${formatYearMonth(m.ym)}</b>
+              <div class="l">${m.salesCount} sale${m.salesCount === 1 ? '' : 's'} recorded</div>
+            </div>
+            <div style="text-align:right">
+              <div class="v ${m.profit>=0?'g':'r'}" style="font-size:17px">${money(m.profit)}</div>
+              <div class="pill ${m.profit>=0?'cash':'d'}" style="font-size:10px; display:inline-block; padding:1px 6px;">Margin: ${margin}%</div>
+            </div>
+          </div>
+
+          <div class="bar" style="margin:8px 0 6px">
+            <i style="width:${Math.max(0, Math.min(100, (m.paid / (m.revenue || 1)) * 100))}%; ${monthlyScope==='special'?'background:var(--purple)':''}"></i>
+          </div>
+
+          <div class="row" style="font-size:12px">
+            <span class="l">Sales: <b>${money(m.revenue)}</b></span>
+            <span class="l">Cost: <b>${money(m.cost)}</b></span>
+          </div>
+
+          <div id="md_${idx}" style="display:none; margin-top:10px; padding-top:8px; border-top:1px dashed var(--bd); font-size:12px">
+            <div class="two" style="margin-bottom:6px">
+              <div>Collected: <b class="g">${money(m.paid)}</b></div>
+              <div>Outstanding: <b class="${m.receivable>0?'a':'g'}">${money(m.receivable)}</b></div>
+            </div>
+            ${topItems.length ? `
+              <div style="margin-top:6px; font-weight:600; color:var(--mu)">Top Products Sold:</div>
+              ${topItems.map(([name, data]) => `
+                <div class="row" style="padding:2px 0; color:var(--tx)">
+                  <span>• ${esc(name)} (×${data.qty})</span>
+                  <span>${money(data.rev)}</span>
+                </div>
+              `).join('')}
+            ` : ''}
+          </div>
+        </div>`;
+      }).join('') : '<div class="empty">No sales recorded yet for this selection.</div>'}
+    </div>
+
+    <button class="btn s" onclick="closeS()" style="margin-top:14px">Done</button>
+  `);
+}
+
+function toggleMonthDetails(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+}
+
+// ==================== SETTINGS (MORE) ====================
 function more() {
   return `
+  <div class="card" style="border-left: 4px solid var(--ac); cursor:pointer" onclick="openProfitByMonth('regular')">
+    <div class="row">
+      <div>
+        <b style="font-size:16px">📈 Profit by Month</b>
+        <div class="l">View monthly profit, sales revenue, and margins breakdown</div>
+      </div>
+      <span class="pill" style="font-size:14px">➔</span>
+    </div>
+  </div>
+
   <div class="card">
     <b>🎨 Theme Appearance</b>
     <label>Select Display Mode</label>
@@ -1039,7 +1211,14 @@ function saveSale(id, isSpecial = false) {
   if (id) {
     Object.assign(targetArr.find(x => x.id === id), o);
   } else {
-    const r = +($('#fr') && $('#fr').value) || (type === 'Cash' ? validItems.reduce((a, it) => a + (it.qty * it.price), 0) : 0);
+    const frInput = $('#fr');
+    let r = 0;
+    if (frInput && frInput.value !== '') {
+      r = Number(frInput.value);
+    } else if (type === 'Cash') {
+      r = validItems.reduce((a, it) => a + (it.qty * it.price), 0);
+    }
+
     targetArr.push({
       ...o,
       id: (isSpecial ? 'ss' : 's') + Date.now(),
@@ -1317,7 +1496,14 @@ function savePurchase(id, isSpecial = false) {
   if (id) {
     Object.assign(targetArr.find(x => x.id === id), o);
   } else {
-    const r = +($('#pi_r') && $('#pi_r').value) || (type === 'Cash' ? validItems.reduce((a, it) => a + (it.qty * it.price), 0) : 0);
+    const pirInput = $('#pi_r');
+    let r = 0;
+    if (pirInput && pirInput.value !== '') {
+      r = Number(pirInput.value);
+    } else if (type === 'Cash') {
+      r = validItems.reduce((a, it) => a + (it.qty * it.price), 0);
+    }
+
     targetArr.push({
       ...o,
       id: (isSpecial ? 'sp' : 'p') + Date.now(),
@@ -1522,9 +1708,9 @@ async function exportXlsx() {
 
   const payRows = [['Scope', 'Entry Type', 'Date', 'Invoice / Bill #', 'Party', 'Amount', 'Payment Mode', 'Cheque / Remark']];
   (S.sales||[]).forEach(s => (s.pays||[]).forEach(p => payRows.push(['Regular', 'Sale Collection', p.d, s.inv||'', s.cust||'', p.a, p.method||'Cash', p.remark||''])));
-  (S.purchases||[]).forEach(pr => (pr.pays||[]).forEach(p => payRows.push(['Regular', 'Supplier Payment', p.d, pr.inv||'', pr.supplier||'', p.a, p.method||'Cash', p.remark||''])));
+  (S.purchases||[]).forEach(pr => (pr.pays||[]).forEach(p => payRows.push(['Regular', 'Supplier Payment', p.d, pr.inv||'', pr.supplier||'', p.a, p.method||'Cheque', p.remark||''])));
   (S.specialSales||[]).forEach(s => (s.pays||[]).forEach(p => payRows.push(['Special', 'Special Sale Collection', p.d, s.inv||'', s.cust||'', p.a, p.method||'Cash', p.remark||''])));
-  (S.specialPurchases||[]).forEach(pr => (pr.pays||[]).forEach(p => payRows.push(['Special', 'Special Supplier Payment', p.d, pr.inv||'', pr.supplier||'', p.a, p.method||'Cash', p.remark||''])));
+  (S.specialPurchases||[]).forEach(pr => (pr.pays||[]).forEach(p => payRows.push(['Special', 'Special Supplier Payment', p.d, pr.inv||'', pr.supplier||'', p.a, p.method||'Cheque', p.remark||''])));
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(payRows), 'Payment Log');
 
   const buf = XLSX.write(wb, {type: 'array', bookType: 'xlsx'});
